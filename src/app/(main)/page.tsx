@@ -11,16 +11,17 @@ export default function Home() {
       redirect('/login');
     }
   }, [status]);
+  const user = session?.user || {};
   const logout = () => signOut({ redirect: true, callbackUrl: '/login' });
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       {status === 'authenticated' && (
         <>
           <div>
-            Logged as: {session?.user?.name} {session?.user?.email}
+            Logged as: {user?.name} {user?.lastName} {user?.role} {user?.email}
           </div>
           <div>
-            <img src={session?.user?.image || ''} />
+            <img src={session?.user?.photoUrl || ''} />
           </div>
           <button onClick={logout}>Logout</button>
         </>

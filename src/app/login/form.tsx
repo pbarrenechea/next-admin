@@ -6,9 +6,9 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { toast } from '@/components/ui/use-toast';
+import { useToast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const FormSchema = z.object({
@@ -24,7 +24,7 @@ type FormData = z.infer<typeof FormSchema>;
 
 export default function LoginForm() {
   const router = useRouter();
-
+  const { toast } = useToast();
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -58,23 +58,23 @@ export default function LoginForm() {
       }
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error(response.error);
       }
       // Process response here
       console.log('Login Successful', response);
       toast({ title: 'Login Successful' });
     } catch (error: any) {
+      toast({ title: 'Login Failed', description: error.message, variant: 'destructive' });
       console.error('Login Failed:', error);
-      toast({ title: 'Login Failed', description: error.message });
     }
   };
 
   return (
-    <div className="w-2/3 space-y-6">
+    <div className="p-4">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className=" p-4 md:p-16 border-[1.5px] rounded-lg border-gray-300 flex flex-col items-center justify-center gap-y-6"
+          className="bg-white md:p-16 border-[1.5px] rounded-lg border-gray-300 flex flex-col items-center justify-center gap-y-6"
         >
           <FormField
             control={form.control}
@@ -101,7 +101,7 @@ export default function LoginForm() {
             )}
           />
           <Button type="submit" className="hover:scale-110 hover:bg-cyan-700" disabled={form.formState.isSubmitting}>
-            {form.formState.isSubmitting ? 'Opening....' : 'Open Sesame!'}
+            {form.formState.isSubmitting ? 'Loading....' : 'Login'}
           </Button>
         </form>
       </Form>
