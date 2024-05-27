@@ -1,0 +1,40 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/app/api/config';
+import connectDB from '@/app/api/lib/db';
+import Users from '@/app/api/models/users';
+
+/**
+ * @desc Returns users.
+ * If email (id) is provided on query params, will return a single user
+ * otherwise will return a page of users. (page parameters should be on the query params
+ * otherwise will use default values for them).
+ * @param req
+ * @param res
+ * @constructor
+ */
+export async function GET(req: NextRequest, res: NextResponse) {
+  const {
+    nextUrl: { searchParams },
+  } = req;
+  try {
+    await connectDB();
+    if (searchParams.get('id')) {
+      const user = Users.findOne({ email: searchParams.get('id') });
+      if (!user) throw new Error(`user with email ${searchParams.get('id')} does not exist`);
+      return new Response(JSON.stringify(user), { status: 200, headers: { 'content-type': 'application/json' } });
+    } else {
+      const page = Number(searchParams.get('page')) || DEFAULT_PAGE;
+      const pageSize = Number(searchParams.get('pageSize')) || DEFAULT_PAGE_SIZE;
+      const users = await Users.find({})
+        .skip(page * pageSize)
+        .limit(pageSize);
+      return new Response(JSON.stringify(users), { status: 200, headers: { 'content-type': 'application/json' } });
+    }
+  } catch (error) {
+    return new Response(JSON.stringify({ message: (error as Error).message }), {
+      status: 401,
+      headers: { 'content-type': 'application/json' },
+    });
+  }
+}
