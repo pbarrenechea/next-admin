@@ -29,7 +29,12 @@ export async function GET(req: NextRequest, res: NextResponse) {
       const users = await Users.find({})
         .skip(page * pageSize)
         .limit(pageSize);
-      return new Response(JSON.stringify(users), { status: 200, headers: { 'content-type': 'application/json' } });
+      const count = await Users.countDocuments({});
+      const pages = Math.ceil(count / pageSize);
+      return new Response(JSON.stringify({ users, pages, items: count }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      });
     }
   } catch (error) {
     return new Response(JSON.stringify({ message: (error as Error).message }), {

@@ -1,18 +1,8 @@
 'use client';
 
-import { Users2 } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
-
-import ReactTablePagination from '@/components/ui/react-table-pagination';
+import ReactTableWrapper from '@/components/ui/react-table-wrapper';
 import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query';
-import {
-  PaginationState,
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  useReactTable,
-} from '@tanstack/react-table';
+import { createColumnHelper } from '@tanstack/react-table';
 
 type UserTableType = {
   id: string;
@@ -78,96 +68,28 @@ const columns = [
   }),
 ];
 
-const fetchData = async ({ pageIndex, pageSize }: { pageIndex: number; pageSize: number }) => {
-  const response = await fetch(`/api/users?page=${pageIndex}&pageSize=${pageSize}`);
-  const rows = await response.json();
-  return {
-    rows: rows,
-    pageCount: 2,
-    rowCount: 4,
-  };
-};
-
-const UsersPageComponent = () => {
-  const [pagination, setPagination] = useState<PaginationState>({
-    pageIndex: 0,
-    pageSize: 2,
-  });
-
-  const dataQuery = useQuery({
-    queryKey: ['data', pagination],
-    queryFn: () => fetchData(pagination),
-  });
-  const defaultData = useMemo(() => [], []);
-
-  const table = useReactTable({
-    data: dataQuery.data?.rows ?? defaultData,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    rowCount: dataQuery.data?.rowCount,
-    getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination,
-    manualPagination: true,
-    state: {
-      pagination,
-    },
-  });
-
-  return (
-    <>
-      <div className="pr-4 mt-4">
-        <div className="card rounded-md bg-white dark:bg-slate-800 shadow-base custom-class">
-          <header className="card-header no-border">
-            <div>
-              <div className="card-title custom-class">Users</div>
-            </div>
-          </header>
-          <main className="card-body p-6">
-            <div className="overflow-x-auto -mx-6">
-              <div className="inline-block min-w-full align-middle p-4">
-                <div className="overflow-hidden ">
-                  <table className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700">
-                    <thead className="bg-slate-200 dark:bg-slate-700 border-t border-slate-100 dark:border-slate-800">
-                      {table.getHeaderGroups().map((headerGroup) => (
-                        <tr key={headerGroup.id}>
-                          {headerGroup.headers.map((header) => (
-                            <th key={header.id} scope="col" className=" table-th ">
-                              {header.isPlaceholder
-                                ? null
-                                : flexRender(header.column.columnDef.header, header.getContext())}
-                            </th>
-                          ))}
-                        </tr>
-                      ))}
-                    </thead>
-                    <tbody className="bg-white divide-y divide-slate-100 dark:bg-slate-800 dark:divide-slate-700">
-                      {table.getRowModel().rows.map((row) => (
-                        <tr key={row.id}>
-                          {row.getVisibleCells().map((cell) => (
-                            <td key={cell.id} className="table-td">
-                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                            </td>
-                          ))}
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <ReactTablePagination table={table} />
-                </div>
-              </div>
-            </div>
-          </main>
-        </div>
-      </div>
-    </>
-  );
-};
-
 const queryClient = new QueryClient();
 
 const UsersPage = () => (
   <QueryClientProvider client={queryClient}>
-    <UsersPageComponent />
+    <div className="pr-4 mt-4">
+      <div className="card rounded-md bg-white dark:bg-slate-800 shadow-base custom-class">
+        <header className="card-header no-border">
+          <div>
+            <div className="card-title custom-class">Users</div>
+          </div>
+        </header>
+        <main className="card-body p-6 min-h-96">
+          <div className="overflow-x-auto -mx-6">
+            <div className="inline-block min-w-full align-middle p-4">
+              <div className="overflow-hidden ">
+                <ReactTableWrapper columns={columns} endPoint="/api/users" resource="users" />
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
   </QueryClientProvider>
 );
 
