@@ -27,7 +27,7 @@ const ReactTableWrapper = ({ columns, endPoint, resource }: { endPoint: string; 
 
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 2,
+    pageSize: 10,
   });
 
   const dataQuery = useQuery({

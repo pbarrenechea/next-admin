@@ -40,7 +40,11 @@ const columns = [
   // Email
   columnHelper.accessor((row) => row.email, {
     id: 'email',
-    cell: (info) => <i>{info.getValue()}</i>,
+    cell: (info) => (
+      <a className="text-info-600" href={`mailto:${info.getValue()}`}>
+        {info.getValue()}
+      </a>
+    ),
     header: () => <span>Email</span>,
     footer: (info) => info.column.id,
   }),
