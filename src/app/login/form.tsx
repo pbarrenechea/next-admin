@@ -62,7 +62,7 @@ export default function LoginForm() {
       }
       // Process response here
       console.log('Login Successful', response);
-      toast({ title: 'Login Successful' });
+      toast({ title: 'Login Successful', variant: 'info' });
     } catch (error: any) {
       toast({ title: 'Login Failed', description: error.message, variant: 'destructive' });
       console.error('Login Failed:', error);

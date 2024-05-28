@@ -1,3 +1,4 @@
+import { hash } from 'bcrypt';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/app/api/config';
@@ -36,6 +37,41 @@ export async function GET(req: NextRequest, res: NextResponse) {
         headers: { 'content-type': 'application/json' },
       });
     }
+  } catch (error) {
+    return new Response(JSON.stringify({ message: (error as Error).message }), {
+      status: 401,
+      headers: { 'content-type': 'application/json' },
+    });
+  }
+}
+
+export async function POST(req: NextRequest, res: NextResponse) {
+  try {
+    await connectDB();
+    const { email, password, name, lastName, photoUrl, role = 'user', jobTitle, phone, location } = await req.json();
+    /* data validation */
+    const oldUser = await Users.findOne({ email: email });
+    if (oldUser) throw new Error(`A user with email ${email} already exists`);
+    if (!name) throw new Error(`Name can't be empty`);
+    if (!lastName) throw new Error(`Last Name can't be empty`);
+    if (!password) throw new Error(`Password can't be empty`);
+
+    const hashedPassword = await hash(password, 8);
+
+    const newUser = new Users({
+      email,
+      name,
+      lastName,
+      password: hashedPassword,
+      photoUrl: photoUrl,
+      role,
+      active: true,
+      jobTitle,
+      phone,
+      location,
+    });
+    await newUser.save();
+    return NextResponse.json({ message: 'success' });
   } catch (error) {
     return new Response(JSON.stringify({ message: (error as Error).message }), {
       status: 401,

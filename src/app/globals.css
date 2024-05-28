@@ -108,5 +108,13 @@
       @apply text-slate-600 dark:text-slate-300 text-sm font-normal capitalize px-6 py-5   border-slate-100 dark:border-slate-700;
     }
 
+    .action-btn {
+      @apply w-8 h-8 justify-center flex p-1 opacity-80;
+    }
 
+    .dialog-form-field { @apply w-full inline-block mt-4 h-[50px]; }
+
+    .dialog-form-left { @apply w-3/12 inline-table pr-2 }
+
+    .dialog-form-right { @apply inline-flex w-9/12 items-center;}
   }
