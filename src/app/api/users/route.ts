@@ -21,7 +21,8 @@ export async function GET(req: NextRequest, res: NextResponse) {
   try {
     await connectDB();
     if (searchParams.get('id')) {
-      const user = Users.findOne({ email: searchParams.get('id') });
+      console.log(searchParams.get('id'));
+      const user = await Users.findOne({ email: searchParams.get('id') });
       if (!user) throw new Error(`user with email ${searchParams.get('id')} does not exist`);
       return new Response(JSON.stringify(user), { status: 200, headers: { 'content-type': 'application/json' } });
     } else {
@@ -45,6 +46,34 @@ export async function GET(req: NextRequest, res: NextResponse) {
   }
 }
 
+/**
+ * @desc Deletes a user
+ */
+
+export async function DELETE(req: NextRequest, res: NextResponse) {
+  try {
+    await connectDB();
+    const params = await req.json();
+    const { id } = params;
+    if (!id) throw new Error(`Id is not defined`);
+    await Users.deleteOne({ email: id });
+    return new Response(JSON.stringify({ message: `User ${id} removed successfully` }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ message: (error as Error).message }), {
+      status: 401,
+      headers: { 'content-type': 'application/json' },
+    });
+  }
+}
+/**
+ * @desc creates a new user
+ * @param req
+ * @param res
+ * @constructor
+ */
 export async function POST(req: NextRequest, res: NextResponse) {
   try {
     await connectDB();

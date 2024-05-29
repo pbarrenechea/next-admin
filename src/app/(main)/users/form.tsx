@@ -1,4 +1,3 @@
-import { Simulate } from 'react-dom/test-utils';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
@@ -9,8 +8,6 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { toast } from '@/components/ui/use-toast';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-import error = Simulate.error;
 
 const FormSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -38,7 +35,7 @@ const FormPage = ({ onFinish }: { onFinish: () => void }) => {
       password: '',
       photoUrl: '',
       phone: '',
-      role: 'User',
+      role: 'user',
       jobTitle: '',
       location: '',
     },
@@ -55,7 +52,7 @@ const FormPage = ({ onFinish }: { onFinish: () => void }) => {
       });
       if (!response.ok) {
         const errorResponse = await response.json();
-        throw new Error(errorResponse?.message || error);
+        throw new Error(errorResponse?.message);
       }
       toast({ title: 'User added successfully', variant: 'info' });
       onFinish();
@@ -73,7 +70,7 @@ const FormPage = ({ onFinish }: { onFinish: () => void }) => {
             render={({ field }) => (
               <FormItem className="dialog-form-field">
                 <div className="dialog-form-left">
-                  <FormLabel>Name:</FormLabel>
+                  <FormLabel>*Name:</FormLabel>
                 </div>
                 <div className="dialog-form-right">
                   <FormControl>
@@ -90,7 +87,7 @@ const FormPage = ({ onFinish }: { onFinish: () => void }) => {
             render={({ field }) => (
               <FormItem className="dialog-form-field">
                 <div className="dialog-form-left">
-                  <FormLabel>Last Name:</FormLabel>
+                  <FormLabel>*Last Name:</FormLabel>
                 </div>
                 <div className="dialog-form-right">
                   <FormControl>
@@ -109,7 +106,7 @@ const FormPage = ({ onFinish }: { onFinish: () => void }) => {
             render={({ field }) => (
               <FormItem className="dialog-form-field">
                 <div className="dialog-form-left">
-                  <FormLabel>Email:</FormLabel>
+                  <FormLabel>*Email:</FormLabel>
                 </div>
                 <div className="dialog-form-right">
                   <FormControl>
@@ -130,9 +127,9 @@ const FormPage = ({ onFinish }: { onFinish: () => void }) => {
                 </div>
                 <div className="dialog-form-right">
                   <FormControl>
-                    <Select {...field} onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select onValueChange={field.onChange} name={field.name} value={field.value}>
                       <SelectTrigger className="w-4/5 inline-flex">
-                        <SelectValue placeholder="Select a Role" />
+                        <SelectValue ref={field.ref} onBlur={field.onBlur} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="user">User</SelectItem>
@@ -199,11 +196,11 @@ const FormPage = ({ onFinish }: { onFinish: () => void }) => {
             render={({ field }) => (
               <FormItem className="dialog-form-field">
                 <div className="dialog-form-left">
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Address</FormLabel>
                 </div>
                 <div className="dialog-form-right">
                   <FormControl>
-                    <Input placeholder="Location" {...field} className="w-4/5 inline-flex" />
+                    <Input placeholder="Address" {...field} className="w-4/5 inline-flex" />
                   </FormControl>
                 </div>
               </FormItem>
@@ -215,7 +212,7 @@ const FormPage = ({ onFinish }: { onFinish: () => void }) => {
             render={({ field }) => (
               <FormItem className="dialog-form-field">
                 <div className="dialog-form-left">
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>*Password</FormLabel>
                 </div>
                 <div className="dialog-form-right">
                   <FormControl>

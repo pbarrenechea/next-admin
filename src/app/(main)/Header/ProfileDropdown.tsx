@@ -32,7 +32,11 @@ const ProfileDropdown = () => {
           <div className="flex items-center">
             <div className="flex-1 ltr:mr-[10px] rtl:ml-[10px]">
               <div className="lg:h-8 lg:w-8 h-7 w-7 rounded-full mr-2">
-                <img src={user?.photoUrl || ''} className="block w-full h-full object-cover rounded-full" />
+                <img
+                  alt={`${user?.name} ${user?.lastName}`}
+                  src={user?.photoUrl || ''}
+                  className="block w-full h-full object-cover rounded-full"
+                />
               </div>
             </div>
             <div className="flex-none text-slate-600 dark:text-white text-sm font-normal items-center lg:flex hidden overflow-hidden text-ellipsis whitespace-nowrap">
@@ -43,7 +47,7 @@ const ProfileDropdown = () => {
           </div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
+      <DropdownMenuContent className="w-56 z-[1000]">
         <DropdownMenuItem
           onClick={() => {
             router.push('/profile');

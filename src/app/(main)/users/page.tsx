@@ -1,8 +1,8 @@
 'use client';
 
-import { Eye, SquarePen, Trash, Trash2 } from 'lucide-react';
+import { SquarePen } from 'lucide-react';
 
-import UserDialog from '@/app/(main)/users/dialog';
+import { DeleteUserAction, NewUserAction, ViewUserAction } from '@/app/(main)/users/actions';
 import ReactTableWrapper from '@/components/ui/react-table-wrapper';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createColumnHelper } from '@tanstack/react-table';
@@ -74,19 +74,15 @@ const columns = [
     footer: (info) => info.column.id,
   }),
   // Empty for actions
-  columnHelper.accessor((row) => row, {
+  columnHelper.accessor((row) => row.email, {
     id: 'Actions',
     cell: (info) => (
       <div className="flex space-x-3 rtl:space-x-reverse">
-        <button className="action-btn">
-          <Eye />
-        </button>
+        <ViewUserAction userId={info.getValue()} />
         <button className="action-btn">
           <SquarePen />
         </button>
-        <button className="action-btn">
-          <Trash2 />
-        </button>
+        <DeleteUserAction userId={info.getValue()} />
       </div>
     ),
     header: () => <></>,
@@ -110,7 +106,7 @@ const UsersPage = () => (
             <div className="inline-block min-w-full align-middle p-4">
               <div className="overflow-hidden ">
                 <div className="relative inline-block w-full text-right">
-                  <UserDialog />
+                  <NewUserAction />
                 </div>
                 <ReactTableWrapper columns={columns} endPoint="/api/users" resource="users" />
               </div>
