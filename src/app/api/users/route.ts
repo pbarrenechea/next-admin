@@ -14,18 +14,19 @@ import Users from '@/app/api/models/users';
  * @param res
  * @constructor
  */
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   const {
     nextUrl: { searchParams },
   } = req;
   try {
     await connectDB();
     if (searchParams.get('id')) {
-      console.log(searchParams.get('id'));
+      // If we pass id means that we want to get a single user
       const user = await Users.findOne({ email: searchParams.get('id') });
       if (!user) throw new Error(`user with email ${searchParams.get('id')} does not exist`);
       return new Response(JSON.stringify(user), { status: 200, headers: { 'content-type': 'application/json' } });
     } else {
+      // Otherwise, we get a page of users
       const page = Number(searchParams.get('page')) || DEFAULT_PAGE;
       const pageSize = Number(searchParams.get('pageSize')) || DEFAULT_PAGE_SIZE;
       const users = await Users.find({})
@@ -47,10 +48,10 @@ export async function GET(req: NextRequest, res: NextResponse) {
 }
 
 /**
- * @desc Deletes a user
+ * @desc Deletes a user by email
  */
 
-export async function DELETE(req: NextRequest, res: NextResponse) {
+export async function DELETE(req: NextRequest) {
   try {
     await connectDB();
     const params = await req.json();
@@ -74,7 +75,7 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
  * @param res
  * @constructor
  */
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
   try {
     await connectDB();
     const { email, password, name, lastName, photoUrl, role = 'user', jobTitle, phone, location } = await req.json();

@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
+import { UserType } from '@/app/(main)/types';
 import { Button } from '@/components/ui/button';
 import ErrorTooltip from '@/components/ui/error-tooltip';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
@@ -21,30 +22,37 @@ const FormSchema = z.object({
   phone: z.string(),
   role: z.string().min(1, 'Role is required'),
   location: z.string(),
+  id: z.string(),
 });
 
 type FormData = z.infer<typeof FormSchema>;
 
-const FormPage = ({ onFinish }: { onFinish: () => void }) => {
+type FormPageProps = {
+  onFinish: () => void;
+  userData?: UserType;
+};
+
+const FormPage = ({ onFinish, userData }: FormPageProps) => {
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: '',
-      lastName: '',
-      email: '',
+      name: userData?.name || '',
+      lastName: userData?.lastName || '',
+      email: userData?.email || '',
       password: '',
-      photoUrl: '',
-      phone: '',
-      role: 'user',
-      jobTitle: '',
-      location: '',
+      photoUrl: userData?.photoUrl || '',
+      phone: userData?.phone || '',
+      role: userData?.role || 'user',
+      jobTitle: userData?.jobTitle || '',
+      location: userData?.location || '',
+      id: userData?.email || '',
     },
   });
   const onSubmit = async (data: FormData) => {
     console.log('Submitting form', data);
     try {
       const response = await fetch('/api/users', {
-        method: 'POST',
+        method: userData ? 'PUT' : 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -225,6 +233,22 @@ const FormPage = ({ onFinish }: { onFinish: () => void }) => {
               </FormItem>
             )}
           />
+
+          <FormField
+            control={form.control}
+            name="id"
+            render={({ field }) => (
+              <FormItem className="dialog-form-field">
+                <div className="dialog-form-right">
+                  <FormControl>
+                    <Input {...field} type="text" className="hidden" />
+                  </FormControl>
+                  {form.formState.errors.id && <ErrorTooltip message={form.formState.errors.id.message || ''} />}
+                </div>
+              </FormItem>
+            )}
+          />
+
           <div className="w-full justify-center flex mt-4">
             <Button type="submit">Submit</Button>
           </div>

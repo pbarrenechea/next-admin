@@ -1,8 +1,6 @@
 'use client';
 
-import { SquarePen } from 'lucide-react';
-
-import { DeleteUserAction, NewUserAction, ViewUserAction } from '@/app/(main)/users/actions';
+import { DeleteUserAction, EditUserAction, NewUserAction, ViewUserAction } from '@/app/(main)/users/actions';
 import ReactTableWrapper from '@/components/ui/react-table-wrapper';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createColumnHelper } from '@tanstack/react-table';
@@ -79,9 +77,7 @@ const columns = [
     cell: (info) => (
       <div className="flex space-x-3 rtl:space-x-reverse">
         <ViewUserAction userId={info.getValue()} />
-        <button className="action-btn">
-          <SquarePen />
-        </button>
+        <EditUserAction userId={info.getValue()} />
         <DeleteUserAction userId={info.getValue()} />
       </div>
     ),
