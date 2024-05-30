@@ -236,14 +236,14 @@ const FormPage = ({ onFinish, userData }: FormPageProps) => {
 
           <FormField
             control={form.control}
-            name="id"
+            name="_id"
             render={({ field }) => (
               <FormItem className="dialog-form-field">
                 <div className="dialog-form-right">
                   <FormControl>
                     <Input {...field} type="text" className="hidden" />
                   </FormControl>
-                  {form.formState.errors.id && <ErrorTooltip message={form.formState.errors.id.message || ''} />}
+                  {form.formState.errors._id && <ErrorTooltip message={form.formState.errors._id.message || ''} />}
                 </div>
               </FormItem>
             )}
