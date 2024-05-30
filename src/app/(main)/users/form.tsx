@@ -7,6 +7,7 @@ import ErrorTooltip from '@/components/ui/error-tooltip';
 import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { toast } from '@/components/ui/use-toast';
 import { createImageFromInitials } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -24,6 +25,7 @@ const FormSchema = z.object({
   role: z.string().min(1, 'Role is required'),
   location: z.string(),
   _id: z.string(),
+  active: z.boolean(),
 });
 
 type FormData = z.infer<typeof FormSchema>;
@@ -40,6 +42,7 @@ const FormPage = ({ onFinish, userData }: FormPageProps) => {
       name: userData?.name || '',
       lastName: userData?.lastName || '',
       email: userData?.email || '',
+      active: userData?.active || false,
       password: '',
       photoUrl: userData?.photoUrl || '',
       phone: userData?.phone || '',
@@ -149,6 +152,22 @@ const FormPage = ({ onFinish, userData }: FormPageProps) => {
                     </Select>
                   </FormControl>
                   {form.formState.errors.role && <ErrorTooltip message={form.formState.errors.role.message || ''} />}
+                </div>
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="active"
+            render={({ field }) => (
+              <FormItem className="dialog-form-field">
+                <div className="dialog-form-left">
+                  <FormLabel>Active:</FormLabel>
+                </div>
+                <div className="dialog-form-right">
+                  <FormControl>
+                    <Switch name="active" checked={field.value} onCheckedChange={field.onChange} />
+                  </FormControl>
                 </div>
               </FormItem>
             )}

@@ -88,7 +88,18 @@ export async function DELETE(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
-    const { email, password, name, lastName, photoUrl, role = 'user', jobTitle, phone, location } = await req.json();
+    const {
+      email,
+      password,
+      name,
+      lastName,
+      photoUrl,
+      role = 'user',
+      jobTitle,
+      phone,
+      location,
+      active = false,
+    } = await req.json();
     /* data validation */
     const oldUser = await Users.findOne({ email: email });
     if (oldUser) throw new Error(`A user with email ${email} already exists`);
@@ -105,7 +116,7 @@ export async function POST(req: NextRequest) {
       password: hashedPassword,
       photoUrl: photoUrl,
       role,
-      active: true,
+      active,
       jobTitle,
       phone,
       location,
@@ -133,6 +144,7 @@ export async function PUT(req: NextRequest) {
       jobTitle,
       phone,
       location,
+      active,
       _id,
     } = await req.json();
     /* data validation */
@@ -150,7 +162,7 @@ export async function PUT(req: NextRequest) {
           password: hashedPassword,
           photoUrl,
           role,
-          active: true,
+          active,
           jobTitle,
           phone,
           location,
