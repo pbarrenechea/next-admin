@@ -1,21 +1,12 @@
 'use client';
 
+import { UserType } from '@/app/(main)/types';
 import { DeleteUserAction, EditUserAction, NewUserAction, ViewUserAction } from '@/app/(main)/users/actions';
 import ReactTableWrapper from '@/components/ui/react-table-wrapper';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createColumnHelper } from '@tanstack/react-table';
 
-type UserTableType = {
-  id: string;
-  name: string;
-  lastName: string;
-  email: string;
-  role: string;
-  photoUrl: string;
-  active: boolean;
-};
-
-const columnHelper = createColumnHelper<UserTableType>();
+const columnHelper = createColumnHelper<UserType>();
 /* Table definitions */
 const columns = [
   // Name + profile image
@@ -72,7 +63,7 @@ const columns = [
     footer: (info) => info.column.id,
   }),
   // Empty for actions
-  columnHelper.accessor((row) => row.email, {
+  columnHelper.accessor((row) => row._id, {
     id: 'Actions',
     cell: (info) => (
       <div className="flex space-x-3 rtl:space-x-reverse">

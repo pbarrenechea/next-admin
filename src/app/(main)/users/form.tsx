@@ -22,7 +22,7 @@ const FormSchema = z.object({
   phone: z.string(),
   role: z.string().min(1, 'Role is required'),
   location: z.string(),
-  id: z.string(),
+  _id: z.string(),
 });
 
 type FormData = z.infer<typeof FormSchema>;
@@ -45,7 +45,7 @@ const FormPage = ({ onFinish, userData }: FormPageProps) => {
       role: userData?.role || 'user',
       jobTitle: userData?.jobTitle || '',
       location: userData?.location || '',
-      id: userData?.email || '',
+      _id: userData?._id || '',
     },
   });
   const onSubmit = async (data: FormData) => {
