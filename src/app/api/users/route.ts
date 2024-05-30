@@ -2,6 +2,7 @@ import { hash } from 'bcrypt';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/app/api/config';
+import checkSession from '@/app/api/lib/checkSession';
 import connectDB from '@/app/api/lib/db';
 import Users from '@/app/api/models/users';
 
@@ -25,8 +26,10 @@ export async function GET(req: NextRequest) {
   const {
     nextUrl: { searchParams },
   } = req;
+
   try {
     await connectDB();
+    await checkSession();
     if (searchParams.get('id')) {
       // If we pass id means that we want to get a single user
       const user = await Users.findById({ _id: searchParams.get('id') });
@@ -64,6 +67,7 @@ export async function GET(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     await connectDB();
+    await checkSession();
     const params = await req.json();
     const { id } = params;
     if (!id) throw new Error(`Id is not defined`);
@@ -88,6 +92,7 @@ export async function DELETE(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
+    await checkSession();
     const {
       email,
       password,
@@ -134,6 +139,7 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     await connectDB();
+    await checkSession();
     const {
       email,
       password,
