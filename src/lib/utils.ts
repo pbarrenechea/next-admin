@@ -15,7 +15,7 @@ export const getRandomColor = () => {
 };
 
 export const createImageFromInitials = (size: number, letter: string | undefined) => {
-  if (!letter || !document) {
+  if (!letter || typeof window === 'undefined') {
     return null;
   }
   const color = getRandomColor();
