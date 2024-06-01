@@ -47,7 +47,7 @@ const ProfileDropdown = () => {
           </div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56 z-[1000]">
+      <DropdownMenuContent className="w-56 z-[1000] hidden lg:inline-block">
         <DropdownMenuItem
           onClick={() => {
             router.push('/profile');
