@@ -1,6 +1,7 @@
 import { Eye, Plus, SquarePen, Trash2, X } from 'lucide-react';
-import { ReactElement, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
+import { getUserData } from '@/app/(main)/requests/users';
 import type { UserType } from '@/app/(main)/types';
 import Form from '@/app/(main)/users/form';
 import ViewUser from '@/app/(main)/users/view';
@@ -92,28 +93,17 @@ const DialogUserData = ({
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<UserType | null>(null);
-  const getUserData = async () => {
-    try {
-      const response = await fetch(`/api/users?id=${userId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        throw new Error(errorResponse?.message);
-      }
-      const currentData = await response.json();
-      setData(currentData);
-      setIsLoading(false);
-    } catch (error: any) {
-      toast({ title: 'Problem getting the user', description: error.message, variant: 'destructive' });
-    }
+  const onError = (message: string) => {
+    toast({ title: 'Problem getting the user', description: message, variant: 'destructive' });
   };
+  const onSuccess = (data: UserType | null) => {
+    setData(data);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
     if (open && !data) {
-      getUserData();
+      getUserData({ userId, onError, onSuccess });
     }
   }, [open, data]);
   return (

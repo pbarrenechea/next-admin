@@ -154,32 +154,30 @@ export async function PUT(req: NextRequest) {
       _id,
     } = await req.json();
     /* data validation */
-    const checkEmail = await Users.findOne({ email: email, _id: { $ne: _id } });
+    const checkEmail = email && (await Users.findOne({ email: email, _id: { $ne: _id } }));
     if (checkEmail) throw new Error(`A user with email ${email} already exists`);
 
-    if (validateUserFields(password, name, lastName)) {
-      const hashedPassword = await hash(password, 8);
-      const updatedUser = await Users.findByIdAndUpdate(
-        _id,
-        {
-          email,
-          name,
-          lastName,
-          password: hashedPassword,
-          photoUrl,
-          role,
-          active,
-          jobTitle,
-          phone,
-          location,
-        },
-        { new: true },
-      );
-      return new Response(JSON.stringify({ message: 'success', user: updatedUser }), {
-        status: 200,
-        headers: { 'content-type': 'application/json' },
-      });
-    }
+    const hashedPassword = password && (await hash(password, 8));
+    const updatedUser = await Users.findByIdAndUpdate(
+      _id,
+      {
+        ...(email && { email }),
+        ...(name && { name }),
+        ...(lastName && { lastName }),
+        ...(password ? { password: hashedPassword } : {}),
+        ...(photoUrl && { photoUrl }),
+        ...(role && { role }),
+        ...(active && { active }),
+        ...(jobTitle && { jobTitle }),
+        ...(phone && { phone }),
+        ...(location && { location }),
+      },
+      { new: true },
+    );
+    return new Response(JSON.stringify({ message: 'success', user: updatedUser }), {
+      status: 200,
+      headers: { 'content-type': 'application/json' },
+    });
   } catch (error) {
     return new Response(JSON.stringify({ message: (error as Error).message }), {
       status: 401,

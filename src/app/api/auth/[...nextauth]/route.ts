@@ -19,7 +19,7 @@ declare module 'next-auth' {
       /** The user's postal address. */
       lastName?: string | null;
       role?: string | null;
-      photoUrl?: string | null;
+      userId?: string | null;
     } & DefaultSession['user'];
   }
 }
@@ -75,9 +75,9 @@ const handler = NextAuth({
             id: currentUser.email,
             name: currentUser.name,
             lastName: currentUser.lastName,
-            photoUrl: currentUser.photoUrl,
             role: currentUser.role,
             email: currentUser.email,
+            userId: currentUser._id.toString(),
           };
         }
         throw new Error('Invalid password');
