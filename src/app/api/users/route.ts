@@ -167,7 +167,7 @@ export async function PUT(req: NextRequest) {
         ...(password ? { password: hashedPassword } : {}),
         ...(photoUrl && { photoUrl }),
         ...(role && { role }),
-        ...(active && { active }),
+        ...(typeof active !== 'undefined' && { active: active }),
         ...(jobTitle && { jobTitle }),
         ...(phone && { phone }),
         ...(location && { location }),

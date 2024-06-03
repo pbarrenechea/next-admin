@@ -37,8 +37,8 @@ export function EditPictureAction({ image, userId }: { image?: string; userId?: 
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button
-          variant="outline"
-          className="absolute right-2 h-8 w-8 bg-slate-50 text-slate-600 rounded-full shadow-sm flex flex-col items-center justify-center md:top-[140px] top-[100px]"
+          variant="ghost"
+          className="absolute right-2 h-8 w-8 bg-slate-50 text-slate-600 rounded-full shadow-sm flex flex-col items-center justify-center top-[100px]"
         >
           <Pencil className="w-4 h-4" />
         </Button>
