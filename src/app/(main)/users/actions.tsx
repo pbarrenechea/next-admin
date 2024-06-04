@@ -1,4 +1,4 @@
-import { Eye, Plus, SquarePen, Trash2, X } from 'lucide-react';
+import { Eye, LucideProps, Plus, SquarePen, Trash2, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { getUserData } from '@/app/(main)/requests/users';
@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import Spinner from '@/components/ui/spinner';
 import { toast } from '@/components/ui/use-toast';
 
-export function DeleteUserAction({ userId }: { userId: string }) {
+export function DeleteUserAction({ userId, userEmail }: { userId: string; userEmail: string }) {
   const [open, setOpen] = useState(false);
   const onDelete = async () => {
     setOpen(false);
@@ -26,7 +26,7 @@ export function DeleteUserAction({ userId }: { userId: string }) {
         const errorResponse = await response.json();
         throw new Error(errorResponse?.message);
       }
-      toast({ title: `User ${userId} removed successfully`, variant: 'info' });
+      toast({ title: `User ${userEmail} removed successfully`, variant: 'info' });
       window.location.reload();
     } catch (error: any) {
       toast({ title: 'Problem deleting user', description: error.message, variant: 'destructive' });
@@ -37,12 +37,12 @@ export function DeleteUserAction({ userId }: { userId: string }) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="ghost" className="action-btn p-0">
-          <Trash2 />
+          <Trash2 width="20" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[350px]">
         <DialogHeader>
-          <DialogTitle className="text-sm">Are you sure you want to delete the user {userId}?</DialogTitle>
+          <DialogTitle className="text-sm">Are you sure you want to delete the user {userEmail}?</DialogTitle>
         </DialogHeader>
         <DialogFooter>
           <Button variant="default" onClick={() => setOpen(false)}>
@@ -86,7 +86,7 @@ const DialogUserData = ({
 }: {
   userId: string;
   Component: React.FC<UserDataComponentProps>;
-  Icon: React.FC;
+  Icon: React.FC<LucideProps>;
   title?: string;
   paddingContent?: boolean;
 }) => {
@@ -109,11 +109,11 @@ const DialogUserData = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="ghost" className="action-btn p-0">
-          <Icon />
+        <Button variant="ghost" className="action-btn p-0" title={title}>
+          <Icon width="20" />
         </Button>
       </DialogTrigger>
-      <DialogContent className={`sm:max-w-[600px] ${paddingContent ? 'p-4' : 'p-0'}`}>
+      <DialogContent className={`sm:max-w-[600px] min-h-96 z-[90] ${paddingContent ? 'p-4' : 'p-0'}`}>
         {title && (
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>

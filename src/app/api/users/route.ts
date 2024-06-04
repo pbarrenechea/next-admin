@@ -99,7 +99,7 @@ export async function POST(req: NextRequest) {
       name,
       lastName,
       photoUrl,
-      role = 'user',
+      role,
       jobTitle,
       phone,
       location,
@@ -140,19 +140,8 @@ export async function PUT(req: NextRequest) {
   try {
     await connectDB();
     await checkSession();
-    const {
-      email,
-      password,
-      name,
-      lastName,
-      photoUrl,
-      role = 'user',
-      jobTitle,
-      phone,
-      location,
-      active,
-      _id,
-    } = await req.json();
+    const { email, password, name, lastName, photoUrl, role, jobTitle, phone, location, active, _id } =
+      await req.json();
     /* data validation */
     const checkEmail = email && (await Users.findOne({ email: email, _id: { $ne: _id } }));
     if (checkEmail) throw new Error(`A user with email ${email} already exists`);

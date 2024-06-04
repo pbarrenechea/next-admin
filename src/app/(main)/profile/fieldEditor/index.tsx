@@ -1,5 +1,7 @@
+import { E164Number } from 'libphonenumber-js';
 import { Pencil, Save } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
+import PhoneInput from 'react-phone-number-input';
 
 import { UserType } from '@/app/(main)/types';
 import { Button } from '@/components/ui/button';
@@ -17,7 +19,6 @@ const FieldEditor = ({ user, propName, setPropValue }: FieldEditorProps) => {
   const [editMode, setEditMode] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [currentValue, setCurrentValue] = useState(user?.[propName] || '');
-  const inputRef = useRef(null);
   const updateField = async () => {
     setIsSaving(true);
     try {
@@ -28,7 +29,7 @@ const FieldEditor = ({ user, propName, setPropValue }: FieldEditorProps) => {
         },
         body: JSON.stringify({
           // @ts-ignore
-          [propName]: inputRef?.current?.value,
+          [propName]: currentValue,
           _id: user?._id,
         }),
       });
@@ -38,7 +39,7 @@ const FieldEditor = ({ user, propName, setPropValue }: FieldEditorProps) => {
       }
 
       // @ts-ignore
-      setPropValue(inputRef?.current?.value);
+      setPropValue(currentValue);
     } catch (error: any) {
       toast({ title: 'Problem updating user', description: error.message, variant: 'destructive' });
     }
@@ -48,15 +49,22 @@ const FieldEditor = ({ user, propName, setPropValue }: FieldEditorProps) => {
   return (
     <>
       {!editMode && <span className="inline-flex">{currentValue}</span>}
-      {editMode && (
-        <Input
-          ref={inputRef}
-          className="inline-flex w-1/2"
-          value={currentValue}
-          disabled={isSaving}
-          onChange={(e) => setCurrentValue(e.target.value)}
-        />
-      )}
+      {editMode &&
+        (propName === 'phone' ? (
+          <PhoneInput
+            className="inline-flex w-1/2"
+            value={currentValue}
+            disabled={isSaving}
+            onChange={(value) => setCurrentValue(value as E164Number)}
+          />
+        ) : (
+          <Input
+            className="inline-flex w-1/2"
+            value={currentValue}
+            disabled={isSaving}
+            onChange={(e) => setCurrentValue(e.target.value)}
+          />
+        ))}
       {!editMode && (
         <Button variant="ghost" className="h-8 w-8 bg-none text-slate-600 inline-flex p-0">
           <Pencil

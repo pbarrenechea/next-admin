@@ -88,7 +88,7 @@ const ProflilePage = () => {
                         <Mail />
                       </div>
                       <div className="ml-2 inline-flex items-baseline w-full">
-                        <div className="w-1/4 md:w-1/12 uppercase text-sm text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
+                        <div className="hidden md:w-1/6 xl:w-1/12 md:flex  uppercase text-sm text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
                           EMAIL:
                         </div>
                         <FieldEditor propName={'email'} user={user} setPropValue={setEmail} />
@@ -99,7 +99,7 @@ const ProflilePage = () => {
                         <Mail />
                       </div>
                       <div className="ml-2 inline-flex items-baseline w-full">
-                        <div className="w-1/4 md:w-1/12 uppercase text-sm text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
+                        <div className="hidden md:w-1/6 xl:w-1/12 md:flex  uppercase text-sm text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
                           Phone:
                         </div>
                         <FieldEditor propName={'phone'} user={user} setPropValue={setPhone} />
@@ -110,7 +110,7 @@ const ProflilePage = () => {
                         <MapPin />
                       </div>
                       <div className="ml-2 inline-flex items-baseline w-full">
-                        <div className="w-1/4 md:w-1/12 uppercase text-sm text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
+                        <div className="hidden md:w-1/6 xl:w-1/12 md:flex uppercase text-sm text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
                           Location:
                         </div>
                         <FieldEditor propName={'location'} user={user} setPropValue={setLocation} />

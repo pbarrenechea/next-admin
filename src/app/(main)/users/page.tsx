@@ -23,7 +23,9 @@ const columns = [
               className="object-cover w-full h-full rounded-full"
             />
           </span>
-          <span className="text-sm text-slate-600 dark:text-slate-300 capitalize">{info.getValue().name}</span>
+          <span className="text-sm text-slate-600 dark:text-slate-300 capitalize hidden lg:inline-flex">
+            {info.getValue().name}
+          </span>
         </span>
       </>
     ),
@@ -33,8 +35,11 @@ const columns = [
   columnHelper.accessor((row) => row.email, {
     id: 'email',
     cell: (info) => (
-      <a className="text-info-600" href={`mailto:${info.getValue()}`}>
-        {info.getValue()}
+      <a
+        className="text-info-600 max-w-[100px] md:max-w-[300px] overflow-ellipsis overflow-hidden block"
+        href={`mailto:${info.getValue()}`}
+      >
+        <span className="">{info.getValue()}</span>
       </a>
     ),
     header: () => <span>Email</span>,
@@ -53,7 +58,7 @@ const columns = [
     cell: (info) => (
       <span className="block w-full">
         <span
-          className={`inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 ${info.getValue() ? 'text-success-500 bg-success-500' : 'text-warning-500 bg-warning-500'}`}
+          className={`inline-block px-1 md:px-3 min-w-[60px] md:min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 ${info.getValue() ? 'text-success-500 bg-success-500' : 'text-warning-500 bg-warning-500'}`}
         >
           {info.getValue() ? 'Active' : 'Inactive'}
         </span>
@@ -63,13 +68,13 @@ const columns = [
     footer: (info) => info.column.id,
   }),
   // Empty for actions
-  columnHelper.accessor((row) => row._id, {
+  columnHelper.accessor((row) => row, {
     id: 'Actions',
     cell: (info) => (
       <div className="flex space-x-3 rtl:space-x-reverse">
-        <ViewUserAction userId={info.getValue()} />
-        <EditUserAction userId={info.getValue()} />
-        <DeleteUserAction userId={info.getValue()} />
+        <ViewUserAction userId={info.getValue()._id} />
+        <EditUserAction userId={info.getValue()._id} />
+        <DeleteUserAction userId={info.getValue()._id} userEmail={info.getValue().email} />
       </div>
     ),
     header: () => <></>,

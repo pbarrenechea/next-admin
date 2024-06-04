@@ -1,4 +1,6 @@
+import { isValidPhoneNumber } from 'libphonenumber-js';
 import { useForm } from 'react-hook-form';
+import PhoneInput from 'react-phone-number-input';
 import * as z from 'zod';
 
 import { UserType } from '@/app/(main)/types';
@@ -21,7 +23,7 @@ const FormSchema = z.object({
   }),
   photoUrl: z.union([z.literal(''), z.string().trim().url()]),
   jobTitle: z.string(),
-  phone: z.string(),
+  phone: z.string().refine(isValidPhoneNumber, { message: 'Invalid phone number' }),
   role: z.string().min(1, 'Role is required'),
   location: z.string(),
   _id: z.string(),
@@ -214,8 +216,9 @@ const FormPage = ({ onFinish, userData }: FormPageProps) => {
                 </div>
                 <div className="dialog-form-right">
                   <FormControl>
-                    <Input placeholder="Phone" {...field} className="w-4/5 inline-flex" />
+                    <PhoneInput className="w-4/5 inline-flex" placeholder="Phone" {...field} />
                   </FormControl>
+                  {form.formState.errors.phone && <ErrorTooltip message={form.formState.errors.phone.message || ''} />}
                 </div>
               </FormItem>
             )}
@@ -251,21 +254,6 @@ const FormPage = ({ onFinish, userData }: FormPageProps) => {
                   {form.formState.errors.password && (
                     <ErrorTooltip message={form.formState.errors.password.message || ''} />
                   )}
-                </div>
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="_id"
-            render={({ field }) => (
-              <FormItem className="dialog-form-field">
-                <div className="dialog-form-right">
-                  <FormControl>
-                    <Input {...field} type="text" className="hidden" />
-                  </FormControl>
-                  {form.formState.errors._id && <ErrorTooltip message={form.formState.errors._id.message || ''} />}
                 </div>
               </FormItem>
             )}

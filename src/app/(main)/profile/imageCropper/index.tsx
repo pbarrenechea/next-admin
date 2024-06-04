@@ -42,17 +42,7 @@ const ImageCropper = ({ initialImage, onSave }: { initialImage?: string; onSave:
     if (!ctx) {
       throw new Error('No 2d context');
     }
-    ctx.drawImage(
-      previewCanvas,
-      0,
-      0,
-      previewCanvas.width,
-      previewCanvas.height,
-      0,
-      0,
-      offscreen.width,
-      offscreen.height,
-    );
+    ctx.drawImage(previewCanvas, 0, 0, previewCanvas.width, previewCanvas.height, 0, 0, 150, 150);
     await onSave(previewCanvas.toDataURL());
     setIsLoading(false);
   };
@@ -113,7 +103,6 @@ const ImageCropper = ({ initialImage, onSave }: { initialImage?: string; onSave:
                   <canvas
                     ref={previewCanvasRef}
                     style={{
-                      display: 'none',
                       border: '1px solid black',
                       objectFit: 'contain',
                       width: completedCrop.width,
