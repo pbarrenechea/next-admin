@@ -103,6 +103,7 @@ const ImageCropper = ({ initialImage, onSave }: { initialImage?: string; onSave:
                   <canvas
                     ref={previewCanvasRef}
                     style={{
+                      display: 'none',
                       border: '1px solid black',
                       objectFit: 'contain',
                       width: completedCrop.width,
