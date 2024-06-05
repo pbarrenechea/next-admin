@@ -60,7 +60,7 @@ const Sidebar = () => {
         <div className="flex flex-no-wrap h-full ">
           <div
             style={{ minHeight: '716px' }}
-            className="w-64 absolute lg:relative bg-white shadow lg:h-full flex-col justify-between hidden lg:flex"
+            className="w-64 absolute lg:relative bg-white dark:bg-slate-800  shadow lg:h-full flex-col justify-between hidden lg:flex dark:shadow-base3 dark:border-b dark:border-slate-700 dark:border-opacity-60"
           >
             <div className="px-8">
               <div className="overflow-hidden rounded-full inline-flex mt-4">
@@ -80,7 +80,7 @@ const Sidebar = () => {
             <Menu />
           </button>
           <div
-            className={`${isMobileOpen ? '' : 'hidden'} w-64 relative bg-white shadow h-full flex-col justify-between lg:hidden transition duration-150 ease-in-out`}
+            className={`${isMobileOpen ? '' : 'hidden'} w-64 relative bg-white dark:bg-slate-800  shadow h-full flex-col justify-between lg:hidden transition duration-150 ease-in-out dark:shadow-base3 dark:border-b dark:border-slate-700 dark:border-opacity-60`}
             id="mobile-nav"
           >
             <button

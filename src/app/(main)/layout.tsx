@@ -15,7 +15,7 @@ const MainLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
         <TooltipProvider>
           <Header />
           <Sidebar />
-          <div className="content-wrapper transition-all duration-150 lg:ml-[242px] bg-primary-foreground mt-0 pl-2">
+          <div className="content-wrapper transition-all duration-150 lg:ml-[242px] bg-primary-foreground mt-0 pl-2 ">
             <div className="page-content page-min-height">
               <div className="pt-4 hidden lg:flex">
                 <Breadcrumb />
