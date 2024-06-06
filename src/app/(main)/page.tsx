@@ -20,9 +20,7 @@ export default function Home() {
           <div>
             Logged as: {user?.name} {user?.lastName} {user?.role} {user?.email}
           </div>
-          <div>
-            <img src={session?.user?.photoUrl || ''} />
-          </div>
+          <div></div>
           <button onClick={logout}>Logout</button>
         </>
       )}
