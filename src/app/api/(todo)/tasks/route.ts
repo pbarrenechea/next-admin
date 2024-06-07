@@ -41,6 +41,42 @@ export async function POST(req: NextRequest) {
   }
 }
 
+export async function PUT(req: NextRequest) {
+  try {
+    await connectDB();
+    // await checkSession();
+    const { name, dueDate, labels, status, starred, userId, _id } = await req.json();
+    const taskLabels = await TaskLabel.find({ _id: { $in: labels } });
+    const newTaskLabel = await Task.findByIdAndUpdate(
+      _id,
+      {
+        ...(name && { name }),
+        ...(dueDate && { dueDate: new Date(dueDate) }),
+        ...(status && { status }),
+        ...(typeof starred !== 'undefined' && { starred }),
+        ...(taskLabels && {
+          ...(labels && {
+            labels: taskLabels.map(({ _id, name, bgColor, fontColor }) => ({
+              _id,
+              bgColor,
+              fontColor,
+              title: name,
+            })),
+          }),
+        }),
+        ...(userId && { user: userId }),
+      },
+      { new: true },
+    );
+    return NextResponse.json({ message: 'success', taskLabel: newTaskLabel });
+  } catch (error) {
+    return new Response(JSON.stringify({ message: (error as Error).message }), {
+      status: 401,
+      headers: { 'content-type': 'application/json' },
+    });
+  }
+}
+
 /**
  * @desc Deletes a label by id
  */
