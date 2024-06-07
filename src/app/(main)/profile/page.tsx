@@ -8,7 +8,6 @@ import { EditPictureAction } from '@/app/(main)/profile/actions';
 import FieldEditor from '@/app/(main)/profile/fieldEditor';
 import { getUserData } from '@/app/(main)/requests/users';
 import type { UserType } from '@/app/(main)/types';
-import { Button } from '@/components/ui/button';
 import { toast } from '@/components/ui/use-toast';
 
 const ProflilePage = () => {

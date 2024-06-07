@@ -8,6 +8,7 @@ export type BreadcrumbsType = {
 const Breadcrumbs: BreadcrumbsType = {
   '/users': [{ label: 'Users', link: '/users' }],
   '/profile': [{ label: 'Profile', link: '/profile' }],
+  '/todos': [{ label: 'Todos', link: '/todos' }],
   '/': [],
 };
 

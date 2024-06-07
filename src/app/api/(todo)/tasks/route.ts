@@ -15,7 +15,7 @@ import TaskLabel from '@/app/api/models/taskLabel';
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
-    // await checkSession();
+    await checkSession();
     const { name, dueDate, labels, userId } = await req.json();
     const taskLabels = await TaskLabel.find({ _id: { $in: labels } });
     const newTaskLabel = new Task({
@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   try {
     await connectDB();
-    // await checkSession();
+    await checkSession();
     const { name, dueDate, labels, status, starred, userId, _id } = await req.json();
     const taskLabels = await TaskLabel.find({ _id: { $in: labels } });
     const newTaskLabel = await Task.findByIdAndUpdate(
@@ -83,7 +83,7 @@ export async function PUT(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   try {
     await connectDB();
-    // await checkSession();
+    await checkSession();
     const params = await req.json();
     const { id } = params;
     if (!id) throw new Error(`Id is not defined`);
@@ -113,7 +113,7 @@ export async function GET(req: NextRequest) {
   } = req;
   try {
     await connectDB();
-    //await checkSession();
+    await checkSession();
     const page = Number(searchParams.get('page')) || DEFAULT_PAGE;
     const pageSize = Number(searchParams.get('pageSize')) || DEFAULT_PAGE_SIZE;
     const userId = searchParams.get('userId');
