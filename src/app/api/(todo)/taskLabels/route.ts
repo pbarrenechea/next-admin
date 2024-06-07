@@ -1,12 +1,9 @@
-import { hash } from 'bcrypt';
-import Next from 'next-auth/src';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/app/api/config';
 import checkSession from '@/app/api/lib/checkSession';
 import connectDB from '@/app/api/lib/db';
 import TaskLabel from '@/app/api/models/taskLabel';
-import Users from '@/app/api/models/users';
 
 /**
  * @desc creates a new task label
