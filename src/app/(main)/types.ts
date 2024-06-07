@@ -10,3 +10,10 @@ export type UserType = {
   jobTitle: string;
   phone: string;
 };
+
+export type TodoTagType = {
+  _id: string;
+  name: string;
+  bgColor: string;
+  fontColor: string;
+};

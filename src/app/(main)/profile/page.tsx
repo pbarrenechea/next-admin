@@ -1,6 +1,6 @@
 'use client';
 
-import { Mail, MapPin, PenIcon, Pencil, Phone, Save } from 'lucide-react';
+import { Mail, MapPin, Phone } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
@@ -95,7 +95,7 @@ const ProflilePage = () => {
                     </li>
                     <li className="flex mt-8 items-center">
                       <div className="inline-flex text-2xl text-slate-600 dark:text-slate-300">
-                        <Mail />
+                        <Phone />
                       </div>
                       <div className="ml-2 inline-flex items-baseline w-full">
                         <div className="hidden md:w-1/6 xl:w-1/12 md:flex  uppercase text-sm text-slate-500 dark:text-slate-300 mb-1 leading-[12px]">
