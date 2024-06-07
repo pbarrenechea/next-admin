@@ -9,6 +9,9 @@ const tasksSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  dueDate: {
+    type: Date,
+  },
   status: {
     type: String,
     required: true,
@@ -18,7 +21,8 @@ const tasksSchema = new Schema({
     {
       _id: { type: Schema.Types.ObjectId, ref: 'TaskLabels' },
       title: String,
-      color: String,
+      bgColor: String,
+      fontColor: String,
     },
   ],
   user: { type: Schema.Types.ObjectId, ref: 'Users' },
