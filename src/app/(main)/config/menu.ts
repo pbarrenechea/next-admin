@@ -1,4 +1,4 @@
-import { Cog, Home, User } from 'lucide-react';
+import { CircleDollarSign, ClipboardCheck, Cog, Home, PiggyBank, User } from 'lucide-react';
 
 export const MenuItems = [
   {
@@ -10,6 +10,31 @@ export const MenuItems = [
         name: 'Dashboard',
         icon: Home,
         link: '/',
+        roles: ['admin', 'user'],
+      },
+    ],
+  },
+  {
+    name: 'My Apps',
+    icon: Cog,
+    roles: ['admin', 'user'],
+    items: [
+      {
+        name: 'Todos',
+        icon: ClipboardCheck,
+        link: '/todos',
+        roles: ['admin', 'user'],
+      },
+      {
+        name: 'Expenses',
+        icon: CircleDollarSign,
+        link: '/expenses',
+        roles: ['admin', 'user'],
+      },
+      {
+        name: 'Savings',
+        icon: PiggyBank,
+        link: '/savings',
         roles: ['admin', 'user'],
       },
     ],

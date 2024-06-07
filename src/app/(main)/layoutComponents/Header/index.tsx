@@ -1,7 +1,7 @@
 'use client';
 
-import Profile from '@/app/(main)/Header/ProfileDropdown';
-import ThemeDropdown from '@/app/(main)/Header/ThemeDropdown';
+import Profile from '@/app/(main)/layoutComponents/Header/ProfileDropdown';
+import ThemeDropdown from '@/app/(main)/layoutComponents/Header/ThemeDropdown';
 
 const Header = () => {
   return (

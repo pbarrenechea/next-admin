@@ -3,9 +3,9 @@
 import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from 'next-themes';
 
-import Breadcrumb from '@/app/(main)/BreadCrumb';
-import Header from '@/app/(main)/Header';
-import Sidebar from '@/app/(main)/Sidebar';
+import Breadcrumb from '@/app/(main)/layoutComponents/BreadCrumb';
+import Header from '@/app/(main)/layoutComponents/Header';
+import Sidebar from '@/app/(main)/layoutComponents/Sidebar';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 const MainLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
