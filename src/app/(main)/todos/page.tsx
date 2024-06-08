@@ -4,7 +4,7 @@ import { LayoutList, ListChecks, Star } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 
 import { AddTodoAction } from '@/app/(main)/todos/actions';
-import Tags from '@/app/(main)/todos/partials/Tags';
+import Tags from '@/app/(main)/todos/partials/Tags/index';
 import Spinner from '@/components/ui/spinner';
 
 const TodosPage = () => {

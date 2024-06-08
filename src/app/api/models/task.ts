@@ -25,6 +25,7 @@ const tasksSchema = new Schema({
       fontColor: String,
     },
   ],
+
   user: { type: Schema.Types.ObjectId, ref: 'Users' },
 });
 

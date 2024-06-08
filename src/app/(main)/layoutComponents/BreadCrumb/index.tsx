@@ -21,13 +21,15 @@ const BreadCrumb = () => {
           <Home />
           <BreadcrumbLink href="/">Home</BreadcrumbLink>
         </BreadcrumbItem>
-        {BreadCrumbPaths[pathname].map((item: { link: string; label: string }) => (
+        {BreadCrumbPaths[pathname].map((item: { link: string; label: string }, index) => (
           <>
             <BreadcrumbSeparator>
               <ChevronsRight />
             </BreadcrumbSeparator>
-            <BreadcrumbItem>
-              <BreadcrumbLink href={item.link}>{item.label}</BreadcrumbLink>
+            <BreadcrumbItem key={`${index}-${item.label}`}>
+              <BreadcrumbLink key={`${index}-${item.label}-link`} href={item.link}>
+                {item.label}
+              </BreadcrumbLink>
             </BreadcrumbItem>
           </>
         ))}

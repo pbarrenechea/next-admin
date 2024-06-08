@@ -9,7 +9,7 @@ export const AddTodoAction = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="mb-4 w-full py-6">
+        <Button variant="outline" className="mb-4 w-full py-6 todo-label-hover">
           <Plus />
           <span>New Todo</span>
         </Button>

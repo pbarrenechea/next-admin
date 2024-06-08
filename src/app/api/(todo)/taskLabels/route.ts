@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
       user: userId,
     });
     await newTaskLabel.save();
-    return NextResponse.json({ message: 'success', taskLabel: newTaskLabel });
+    return NextResponse.json({ message: 'success', label: newTaskLabel });
   } catch (error) {
     return new Response(JSON.stringify({ message: (error as Error).message }), {
       status: 401,
