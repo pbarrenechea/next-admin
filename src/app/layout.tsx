@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
+import { getServerSession } from 'next-auth/next';
 import { Inter } from 'next/font/google';
 import 'react-phone-number-input/style.css';
 
+import checkSession from '@/app/api/lib/checkSession';
 import { Toaster } from '@/components/ui/toaster';
 
 import './globals.css';
