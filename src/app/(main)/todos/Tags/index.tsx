@@ -1,9 +1,8 @@
-import { Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 import { MAX_TODO_TAGS_PER_USER } from '@/app/(main)/config/settings';
 import { getTodoTagsData } from '@/app/(main)/requests/todoTags';
-import { DeleteTag, EditTag, NewTag } from '@/app/(main)/todos/partials/Tags/actions';
+import { DeleteTag, EditTag, NewTag } from '@/app/(main)/todos/Tags/actions';
 import { TodoTagType } from '@/app/(main)/types';
 import { toast } from '@/components/ui/use-toast';
 
@@ -63,14 +62,7 @@ const Index = ({ userId }: { userId: string }) => {
                     className={`${index === selectedTag ? 'ring-gray-400 ring-4' : ''} inline-block h-2 w-2 rounded-full ring-opacity-30 transition-all duration-150`}
                     style={{ background: tag.bgColor }}
                   ></span>
-                  <span
-                    className="transition duration-150 ml-2"
-                    style={{
-                      color: tag.fontColor,
-                    }}
-                  >
-                    {tag.name}
-                  </span>
+                  <span className="transition duration-150 ml-2">{tag.name}</span>
                 </div>
 
                 <EditTag tag={tag} onUpdate={updateTags} userId={userId} />

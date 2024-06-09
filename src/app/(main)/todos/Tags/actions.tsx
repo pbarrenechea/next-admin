@@ -1,7 +1,7 @@
 import { Pencil, Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
-import Form from '@/app/(main)/todos/partials/Tags/form';
+import Form from '@/app/(main)/todos/Tags/form';
 import { TodoTagType } from '@/app/(main)/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';

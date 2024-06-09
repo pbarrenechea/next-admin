@@ -1,11 +1,15 @@
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
 
+import Form from '@/app/(main)/todos/Todos/form';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
-export const AddTodoAction = () => {
+export const AddTodoAction = ({ userId }: { userId: string }) => {
   const [open, setOpen] = useState(false);
+  const onFinish = () => {
+    setOpen(false);
+  };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -18,6 +22,7 @@ export const AddTodoAction = () => {
         <DialogHeader>
           <DialogTitle className="p-4">New Todo</DialogTitle>
         </DialogHeader>
+        <Form userId={userId} onFinish={onFinish} />
       </DialogContent>
     </Dialog>
   );

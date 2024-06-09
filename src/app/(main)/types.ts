@@ -17,3 +17,19 @@ export type TodoTagType = {
   bgColor: string;
   fontColor: string;
 };
+
+export enum TodoStatusType {
+  Todo = 'todo',
+  InProgress = 'in progress',
+  Done = 'done',
+}
+
+export type TodoType = {
+  _id: string;
+  name: string;
+  starred: boolean;
+  status: TodoStatusType;
+  dueDate: number | null;
+  labels: Array<string>;
+  user: string;
+};

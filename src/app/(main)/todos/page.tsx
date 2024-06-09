@@ -3,8 +3,9 @@
 import { LayoutList, ListChecks, Star } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 
-import { AddTodoAction } from '@/app/(main)/todos/actions';
-import Tags from '@/app/(main)/todos/partials/Tags/index';
+import Tags from '@/app/(main)/todos/Tags/index';
+import { AddTodoAction } from '@/app/(main)/todos/Todos/actions';
+import TodosTable from '@/app/(main)/todos/Todos/table';
 import Spinner from '@/components/ui/spinner';
 
 const TodosPage = () => {
@@ -19,7 +20,7 @@ const TodosPage = () => {
             <div className="card rounded-md bg-white dark:bg-slate-800 shadow-base h-full">
               <main className="card-body py-6 h-full flex flex-col">
                 <div className="flex-1 h-full px-6">
-                  <AddTodoAction />
+                  <AddTodoAction userId={data?.user?.userId || ''} />
                   <ul>
                     <li className="todo-status-item ">
                       <LayoutList width={20} />{' '}
@@ -43,7 +44,9 @@ const TodosPage = () => {
             </div>
           </div>
           {/* right panel */}
-          <div className="flex-1 md:w-[calc(100%-320px)]"></div>
+          <div className="flex-1 md:w-[calc(100%-320px)]">
+            <TodosTable userId={data?.user.userId || ''} />
+          </div>
         </div>
       )}
     </>
