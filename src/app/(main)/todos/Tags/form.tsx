@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
+import { submitRequest } from '@/app/(main)/requests/submit';
 import { TodoTagType } from '@/app/(main)/types';
 import { Button } from '@/components/ui/button';
 import { Picker } from '@/components/ui/color-picker';
@@ -38,26 +39,7 @@ const FormPage = ({ onFinish, tagData, userId }: FormPageProps) => {
     },
   });
   const onSubmit = async (data: FormData) => {
-    try {
-      const response = await fetch('/api/taskLabels', {
-        method: tagData ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...data,
-        }),
-      });
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        throw new Error(errorResponse?.message);
-      }
-      toast({ title: 'Tag updated successfully', variant: 'info' });
-      const { label } = await response.json();
-      onFinish(label);
-    } catch (error: any) {
-      toast({ title: 'Problem trying to update tag', description: error.message, variant: 'destructive' });
-    }
+    await submitRequest<TodoTagType>(data, tagData ? 'PUT' : 'POST', '/api/taskLabels', onFinish, 'Tag', 'label');
   };
   return (
     <div className="space-y-6">

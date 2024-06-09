@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import PhoneInput from 'react-phone-number-input';
 import * as z from 'zod';
 
+import { submitRequest } from '@/app/(main)/requests/submit';
 import { UserType } from '@/app/(main)/types';
 import { Button } from '@/components/ui/button';
 import ErrorTooltip from '@/components/ui/error-tooltip';
@@ -10,7 +11,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { toast } from '@/components/ui/use-toast';
 import { createImageFromInitials } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -55,26 +55,11 @@ const FormPage = ({ onFinish, userData }: FormPageProps) => {
     },
   });
   const onSubmit = async (data: FormData) => {
-    try {
-      const response = await fetch('/api/users', {
-        method: userData ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...data,
-          photoUrl: data.photoUrl || createImageFromInitials(150, `${data.name[0]}${data.lastName[0]}`),
-        }),
-      });
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        throw new Error(errorResponse?.message);
-      }
-      toast({ title: 'User added successfully', variant: 'info' });
-      onFinish();
-    } catch (error: any) {
-      toast({ title: 'Problem added user', description: error.message, variant: 'destructive' });
-    }
+    const formattedData = {
+      ...data,
+      photoUrl: data.photoUrl || createImageFromInitials(150, `${data.name[0]}${data.lastName[0]}`),
+    };
+    await submitRequest<UserType>(formattedData, userData ? 'PUT' : 'POST', '/api/users', onFinish, 'User', 'user');
   };
   return (
     <div className="space-y-6">

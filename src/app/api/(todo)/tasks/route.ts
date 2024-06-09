@@ -16,11 +16,13 @@ export async function POST(req: NextRequest) {
   try {
     await connectDB();
     await checkSession();
-    const { name, dueDate, labels, userId } = await req.json();
+    const { name, dueDate, labels, userId, starred, status } = await req.json();
     const taskLabels = await TaskLabel.find({ _id: { $in: labels } });
-    const newTaskLabel = new Task({
+    const newTask = new Task({
       name,
       ...(dueDate && { dueDate: new Date(dueDate) }),
+      ...(status && { status }),
+      ...(typeof starred !== 'undefined' && { starred }),
       ...(taskLabels && {
         labels: taskLabels.map(({ _id, name, bgColor, fontColor }) => ({
           _id,
@@ -31,8 +33,8 @@ export async function POST(req: NextRequest) {
       }),
       user: userId,
     });
-    await newTaskLabel.save();
-    return NextResponse.json({ message: 'success', taskLabel: newTaskLabel });
+    await newTask.save();
+    return NextResponse.json({ message: 'success', todo: newTask });
   } catch (error) {
     return new Response(JSON.stringify({ message: (error as Error).message }), {
       status: 401,
@@ -47,7 +49,7 @@ export async function PUT(req: NextRequest) {
     await checkSession();
     const { name, dueDate, labels, status, starred, userId, _id } = await req.json();
     const taskLabels = await TaskLabel.find({ _id: { $in: labels } });
-    const newTaskLabel = await Task.findByIdAndUpdate(
+    const newTask = await Task.findByIdAndUpdate(
       _id,
       {
         ...(name && { name }),
@@ -68,7 +70,7 @@ export async function PUT(req: NextRequest) {
       },
       { new: true },
     );
-    return NextResponse.json({ message: 'success', taskLabel: newTaskLabel });
+    return NextResponse.json({ message: 'success', todo: newTask });
   } catch (error) {
     return new Response(JSON.stringify({ message: (error as Error).message }), {
       status: 401,

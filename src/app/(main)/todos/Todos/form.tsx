@@ -3,6 +3,7 @@ import { Calendar as CalendarIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
+import { submitRequest } from '@/app/(main)/requests/submit';
 import { TodoStatusType, TodoType } from '@/app/(main)/types';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -12,7 +13,6 @@ import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { toast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 
@@ -48,26 +48,7 @@ const FormPage = ({ onFinish, todoData, userId }: FormPageProps) => {
     },
   });
   const onSubmit = async (data: FormData) => {
-    try {
-      const response = await fetch('/api/tasks', {
-        method: todoData ? 'PUT' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...data,
-        }),
-      });
-      if (!response.ok) {
-        const errorResponse = await response.json();
-        throw new Error(errorResponse?.message);
-      }
-      toast({ title: 'Task updated successfully', variant: 'info' });
-      const { label } = await response.json();
-      onFinish(label);
-    } catch (error: any) {
-      toast({ title: 'Problem trying to update task', description: error.message, variant: 'destructive' });
-    }
+    await submitRequest<TodoType>(data, todoData ? 'PUT' : 'POST', '/api/tasks', onFinish, 'Todo', 'todo');
   };
   return (
     <div className="space-y-6">
