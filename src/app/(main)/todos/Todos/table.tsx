@@ -25,22 +25,36 @@ const TodosTable = ({ userId }: { userId: string }) => {
     getTodosData({ userId, page, pageSize: DEFAULT_PAGE_SIZE, onError, onSuccess });
   }, [page]);
 
-  const onStarredUpdate = (todoId: string, value: boolean) => {
+  const onStarredUpdate = async (todoId: string, value: boolean) => {
     setTodos(
       todos.map((item) => {
         if (item._id === todoId) return { ...item, starred: value };
         return item;
       }),
     );
+    await fetch('/api/tasks', {
+      method: 'PUT',
+      body: JSON.stringify({ starred: value, _id: todoId }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   };
 
-  const onCompletitionUpdate = (todoId: string, value: boolean) => {
+  const onCompletitionUpdate = async (todoId: string, value: boolean) => {
     setTodos(
       todos.map((item) => {
         if (item._id === todoId) return { ...item, status: value ? TodoStatusType.Done : TodoStatusType.Todo };
         return item;
       }),
     );
+    await fetch('/api/tasks', {
+      method: 'PUT',
+      body: JSON.stringify({ status: TodoStatusType.Done, _id: todoId }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
   };
 
   return (
