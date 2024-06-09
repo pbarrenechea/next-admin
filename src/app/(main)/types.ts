@@ -29,7 +29,7 @@ export type TodoType = {
   name: string;
   starred: boolean;
   status: TodoStatusType;
-  dueDate: number | null;
+  dueDate: string;
   labels: Array<string>;
   user: string;
 };
