@@ -16,12 +16,19 @@ import { Switch } from '@/components/ui/switch';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 
+const labelSchema = z.object({
+  _id: z.string(), // or z.number() if the id is a number
+  name: z.string(),
+  bgColor: z.string(),
+  fontColor: z.string(),
+});
+
 const FormSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   starred: z.boolean(),
   status: z.nativeEnum(TodoStatusType),
   dueDate: z.date(),
-  labels: z.array(z.string()),
+  labels: z.array(labelSchema),
   _id: z.string(),
   userId: z.string(),
 });
@@ -29,7 +36,7 @@ const FormSchema = z.object({
 type FormData = z.infer<typeof FormSchema>;
 
 type FormPageProps = {
-  onFinish: (tag: TodoType) => void;
+  onFinish: (todo: TodoType) => void;
   todoData?: TodoType;
   userId: string;
 };

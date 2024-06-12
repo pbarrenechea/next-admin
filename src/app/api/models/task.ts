@@ -20,7 +20,7 @@ const tasksSchema = new Schema({
   labels: [
     {
       _id: { type: Schema.Types.ObjectId, ref: 'TaskLabels' },
-      title: String,
+      name: String,
       bgColor: String,
       fontColor: String,
     },

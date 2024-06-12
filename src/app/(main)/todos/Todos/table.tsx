@@ -1,79 +1,38 @@
 'use client';
 
-import { Star } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Star, Timer } from 'lucide-react';
 
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/app/(main)/config/settings';
-import { getTodosData } from '@/app/(main)/requests/todos';
+import TimerTooltip from '@/app/(main)/todos/Todos/TimerTooltip';
 import { TodoStatusType, TodoType } from '@/app/(main)/types';
 import { Checkbox } from '@/components/ui/checkbox';
 import LoadingSpinner from '@/components/ui/spinner';
-import { toast } from '@/components/ui/use-toast';
-import { formatTodoDate } from '@/lib/date';
 
-const TodosTable = ({ userId }: { userId: string }) => {
-  const [todos, setTodos] = useState<Array<TodoType>>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(DEFAULT_PAGE);
-  const onSuccess = (newtTodos: Array<TodoType>) => {
-    setTodos([...todos, ...newtTodos]);
-  };
-  const onError = (message: string) => {
-    toast({ title: 'Problem getting the todos', description: message, variant: 'destructive' });
-  };
-  useEffect(() => {
-    getTodosData({ userId, page, pageSize: DEFAULT_PAGE_SIZE, onError, onSuccess });
-  }, [page]);
+type TodosTableProps = {
+  isLoading: boolean;
+  todos: Array<TodoType>;
+  onCompletitionUpdate: (todoId: string, value: boolean) => void;
+  onStarredUpdate: (todoId: string, value: boolean) => void;
+};
 
-  const onStarredUpdate = async (todoId: string, value: boolean) => {
-    setTodos(
-      todos.map((item) => {
-        if (item._id === todoId) return { ...item, starred: value };
-        return item;
-      }),
-    );
-    await fetch('/api/tasks', {
-      method: 'PUT',
-      body: JSON.stringify({ starred: value, _id: todoId }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  };
-
-  const onCompletitionUpdate = async (todoId: string, value: boolean) => {
-    setTodos(
-      todos.map((item) => {
-        if (item._id === todoId) return { ...item, status: value ? TodoStatusType.Done : TodoStatusType.Todo };
-        return item;
-      }),
-    );
-    await fetch('/api/tasks', {
-      method: 'PUT',
-      body: JSON.stringify({ status: TodoStatusType.Done, _id: todoId }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  };
-
+const TodosTable = ({ isLoading, todos, onStarredUpdate, onCompletitionUpdate }: TodosTableProps) => {
+  const currentDate = new Date();
   return (
     <div className="card rounded-md bg-white dark:bg-slate-800 shadow-base h-full mx-2">
       {isLoading && <LoadingSpinner className="left-1/2 top-1/2 absolute" width="50" height="50" />}
       {!isLoading && (
         <ul className="divide-y divide-slate-100 dark:divide-slate-700 -mb-6 h-full">
-          {todos.map((todo, index) => (
+          {todos.map((todo: TodoType, index: number) => (
             <li
               key={`${todo.name}-${index}`}
-              className="flex items-center px-6 space-x-4 py-6 hover:-translate-y-1 hover:shadow-todo transition-all duration-200"
+              className="flex w-full items-center px-6 space-x-4 py-6 hover:-translate-y-1 hover:shadow-todo transition-all duration-200"
             >
-              <div>
+              <div className="w-6">
                 <Checkbox
                   defaultChecked={todo.status === 'done'}
                   onCheckedChange={(value) => onCompletitionUpdate(todo._id, value as boolean)}
                 />
               </div>
-              <div>
+              <div className="w-6">
                 {todo.starred ? (
                   <Star
                     className="w-4 h-4 text-amber-400 cursor-pointer fill-amber-500"
@@ -83,14 +42,27 @@ const TodosTable = ({ userId }: { userId: string }) => {
                   <Star className="w-4 h-4 cursor-pointer" onClick={() => onStarredUpdate(todo._id, true)} />
                 )}
               </div>
-              <span
-                className={`flex-1 text-sm text-slate-600 dark:text-slate-300 truncate ${todo.status === 'done' ? 'line-through' : ''}`}
-              >
-                {todo.name}
-              </span>
-              <span className="flex-1 text-sm text-slate-600 dark:text-slate-300 truncate">
-                {formatTodoDate(todo.dueDate)}
-              </span>
+              <div className="w-3/5">
+                <span
+                  className={`flex-1 text-sm text-slate-600 dark:text-slate-300 truncate ${todo.status === TodoStatusType.Done ? 'line-through' : ''}`}
+                >
+                  {todo.name}
+                </span>
+              </div>
+              <div className="flex">
+                <TimerTooltip dueDate={todo.dueDate} status={todo.status} />
+              </div>
+              <div className="w-1/4">
+                {todo.labels.map((label, index) => (
+                  <span
+                    className="px-1 md:px-3 min-w-[60px] md:min-w-[90px] text-center mx-1 py-1 rounded-[999px] bg-opacity-25 text-xs"
+                    key={`${index}-${label.name}`}
+                    style={{ background: label.bgColor, color: label.fontColor }}
+                  >
+                    {label.name}
+                  </span>
+                ))}
+              </div>
             </li>
           ))}
         </ul>

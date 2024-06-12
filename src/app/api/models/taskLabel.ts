@@ -29,7 +29,7 @@ taskLabelsSchema.post('findOneAndUpdate', async function (doc) {
       { 'labels._id': _id },
       {
         $set: {
-          'labels.$[elem].title': name,
+          'labels.$[elem].name': name,
           'labels.$[elem].bgColor': bgColor,
           'labels.$[elem].fontColor': fontColor,
         },

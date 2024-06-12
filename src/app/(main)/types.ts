@@ -30,6 +30,6 @@ export type TodoType = {
   starred: boolean;
   status: TodoStatusType;
   dueDate: string;
-  labels: Array<string>;
+  labels: Array<TodoTagType>;
   user: string;
 };

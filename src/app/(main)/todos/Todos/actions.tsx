@@ -2,12 +2,19 @@ import { Plus } from 'lucide-react';
 import { useState } from 'react';
 
 import Form from '@/app/(main)/todos/Todos/form';
+import { TodoType } from '@/app/(main)/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
-export const AddTodoAction = ({ userId }: { userId: string }) => {
+type AddTodoActionProps = {
+  userId: string;
+  onAddFinish: (todo: TodoType) => void;
+};
+
+export const AddTodoAction = ({ userId, onAddFinish }: AddTodoActionProps) => {
   const [open, setOpen] = useState(false);
-  const onFinish = () => {
+  const onFinish = (newTodo: TodoType) => {
+    onAddFinish(newTodo);
     setOpen(false);
   };
   return (

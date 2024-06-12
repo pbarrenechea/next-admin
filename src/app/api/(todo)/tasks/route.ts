@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
           _id,
           bgColor,
           fontColor,
-          title: name,
+          name,
         })),
       }),
       user: userId,
@@ -62,7 +62,7 @@ export async function PUT(req: NextRequest) {
               _id,
               bgColor,
               fontColor,
-              title: name,
+              name,
             })),
           }),
         }),
@@ -120,6 +120,7 @@ export async function GET(req: NextRequest) {
     const pageSize = Number(searchParams.get('pageSize')) || DEFAULT_PAGE_SIZE;
     const userId = searchParams.get('userId');
     const tasks = await Task.find({ user: userId })
+      .sort({ dueDate: 'desc' })
       .skip(page * pageSize)
       .limit(pageSize);
     const count = await Task.countDocuments({ user: userId });
