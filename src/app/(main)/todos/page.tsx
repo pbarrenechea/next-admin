@@ -5,18 +5,21 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/app/(main)/config/settings';
+import { getTodoTagsData } from '@/app/(main)/requests/todoTags';
 import { getTodosData } from '@/app/(main)/requests/todos';
 import Tags from '@/app/(main)/todos/Tags/index';
 import { AddTodoAction } from '@/app/(main)/todos/Todos/actions';
 import TodosTable from '@/app/(main)/todos/Todos/table';
-import { TodoStatusType, TodoType } from '@/app/(main)/types';
+import { TodoStatusType, TodoTagType, TodoType } from '@/app/(main)/types';
 import Spinner from '@/components/ui/spinner';
 import { toast } from '@/components/ui/use-toast';
 
 const TodosPage = () => {
   const { status, data } = useSession();
   const [todos, setTodos] = useState<Array<TodoType>>([]);
+  const [tags, setTags] = useState<Array<TodoTagType>>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingTags, setIsLoadingTags] = useState(true);
   const [page, setPage] = useState(DEFAULT_PAGE);
 
   const onGetTodosSuccess = (newTodos: Array<TodoType>) => {
@@ -68,6 +71,22 @@ const TodosPage = () => {
 
   useEffect(() => {
     if (status === 'authenticated') {
+      getTodoTagsData({
+        userId: data?.user.userId || '',
+        onError: (message: string) => {
+          setIsLoadingTags(false);
+          toast({ title: 'Problem getting the tags', description: message, variant: 'destructive' });
+        },
+        onSuccess: (data: Array<TodoTagType>) => {
+          setIsLoadingTags(false);
+          setTags(data);
+        },
+      });
+    }
+  }, [status]);
+
+  useEffect(() => {
+    if (status === 'authenticated') {
       getTodosData({
         userId: data?.user.userId || '',
         page,
@@ -88,7 +107,7 @@ const TodosPage = () => {
             <div className="card rounded-md bg-white dark:bg-slate-800 shadow-base h-full">
               <main className="card-body py-6 h-full flex flex-col">
                 <div className="flex-1 h-full px-6">
-                  <AddTodoAction userId={data?.user?.userId || ''} onAddFinish={onAddFinish} />
+                  <AddTodoAction userId={data?.user?.userId || ''} onAddFinish={onAddFinish} tags={tags} />
                   <ul>
                     <li className="todo-status-item ">
                       <LayoutList width={20} />{' '}
@@ -106,7 +125,7 @@ const TodosPage = () => {
                   <div className="block py-4 text-slate-800 dark:text-slate-400 font-semibold text-xs uppercase">
                     Tags
                   </div>
-                  <Tags userId={data?.user.userId || ''} />
+                  {!isLoadingTags && <Tags userId={data?.user.userId || ''} tags={tags} setTags={setTags} />}
                 </div>
               </main>
             </div>

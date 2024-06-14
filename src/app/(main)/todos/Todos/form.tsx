@@ -4,7 +4,8 @@ import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import { submitRequest } from '@/app/(main)/requests/submit';
-import { TodoStatusType, TodoType } from '@/app/(main)/types';
+import TagSelect from '@/app/(main)/todos/Tags/tagSelect';
+import { TodoStatusType, TodoTagType, TodoType } from '@/app/(main)/types';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import ErrorTooltip from '@/components/ui/error-tooltip';
@@ -37,11 +38,12 @@ type FormData = z.infer<typeof FormSchema>;
 
 type FormPageProps = {
   onFinish: (todo: TodoType) => void;
+  tags: Array<TodoTagType>;
   todoData?: TodoType;
   userId: string;
 };
 
-const FormPage = ({ onFinish, todoData, userId }: FormPageProps) => {
+const FormPage = ({ onFinish, todoData, userId, tags }: FormPageProps) => {
   const form = useForm({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -162,6 +164,29 @@ const FormPage = ({ onFinish, todoData, userId }: FormPageProps) => {
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control}
+            name="labels"
+            render={({ field }) => (
+              <FormItem className="dialog-form-field">
+                <div className="dialog-form-left">
+                  <FormLabel>Labels:</FormLabel>
+                </div>
+                <div className="dialog-form-right">
+                  <FormControl>
+                    <TagSelect
+                      options={tags}
+                      defaultOptions={field.value as TodoTagType[]}
+                      name="labels"
+                      onChange={(val) => {
+                        field.onChange(val);
+                      }}
+                    />
+                  </FormControl>
+                </div>
+              </FormItem>
+            )}
+          ></FormField>
           <div className="w-full justify-center flex mt-4">
             <Button type="submit">Submit</Button>
           </div>
