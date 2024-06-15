@@ -8,9 +8,10 @@ type TagListProps = {
   userId: string;
   tags: Array<TodoTagType>;
   setTags: (tags: Array<TodoTagType>) => void;
+  setFilterTag: (tagId: string | null) => void;
 };
 
-const TagsList = ({ userId, tags, setTags }: TagListProps) => {
+const TagsList = ({ userId, tags, setTags, setFilterTag }: TagListProps) => {
   const [selectedTag, setSelectedTag] = useState(-1);
 
   const addTag = (tag: TodoTagType) => {
@@ -33,8 +34,10 @@ const TagsList = ({ userId, tags, setTags }: TagListProps) => {
   const selectTag = (index: number) => {
     if (index !== selectedTag) {
       setSelectedTag(index);
+      setFilterTag(tags[index]._id);
     } else {
       setSelectedTag(-1);
+      setFilterTag(null);
     }
   };
 

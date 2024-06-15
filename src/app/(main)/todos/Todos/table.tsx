@@ -15,7 +15,6 @@ type TodosTableProps = {
 };
 
 const TodosTable = ({ isLoading, todos, onStarredUpdate, onCompletitionUpdate }: TodosTableProps) => {
-  const currentDate = new Date();
   return (
     <div className="card rounded-md bg-white dark:bg-slate-800 shadow-base h-full mx-2">
       {isLoading && <LoadingSpinner className="left-1/2 top-1/2 absolute" width="50" height="50" />}
@@ -54,13 +53,13 @@ const TodosTable = ({ isLoading, todos, onStarredUpdate, onCompletitionUpdate }:
               </div>
               <div className="w-1/4">
                 {todo.labels.map((label, index) => (
-                  <span
-                    className="px-1 md:px-3 min-w-[60px] md:min-w-[90px] text-center mx-1 py-1 rounded-[999px] bg-opacity-25 text-xs"
+                  <div
+                    className="inline-block px-1 md:px-1 min-w-[60px] md:min-w-[70px] text-center mx-1 py-1 rounded-[999px] bg-opacity-25 text-[10px]"
                     key={`${index}-${label.name}`}
                     style={{ background: label.bgColor, color: label.fontColor }}
                   >
                     {label.name}
-                  </span>
+                  </div>
                 ))}
               </div>
             </li>

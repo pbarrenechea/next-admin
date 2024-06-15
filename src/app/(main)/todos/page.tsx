@@ -18,13 +18,17 @@ const TodosPage = () => {
   const { status, data } = useSession();
   const [todos, setTodos] = useState<Array<TodoType>>([]);
   const [tags, setTags] = useState<Array<TodoTagType>>([]);
+  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [starredFilter, setStarredFilter] = useState<boolean>(false);
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingTags, setIsLoadingTags] = useState(true);
   const [page, setPage] = useState(DEFAULT_PAGE);
 
   const onGetTodosSuccess = (newTodos: Array<TodoType>) => {
     setIsLoading(false);
-    setTodos([...todos, ...newTodos]);
+    setTodos(newTodos);
   };
 
   const onGetTodosError = (message: string) => {
@@ -69,6 +73,20 @@ const TodosPage = () => {
     setTodos([todo, ...todos]);
   };
 
+  const onStatusFilterClick = (filter: string) => {
+    setStarredFilter(false);
+    if (filter === statusFilter) {
+      setStatusFilter(null);
+    } else {
+      setStatusFilter(filter);
+    }
+  };
+
+  const onStarredFilterClick = () => {
+    setStatusFilter(null);
+    setStarredFilter((prev) => !prev);
+  };
+
   useEffect(() => {
     if (status === 'authenticated') {
       getTodoTagsData({
@@ -87,15 +105,18 @@ const TodosPage = () => {
 
   useEffect(() => {
     if (status === 'authenticated') {
-      getTodosData({
+      const params = getTodosData({
         userId: data?.user.userId || '',
-        page,
+        page: 0,
         pageSize: DEFAULT_PAGE_SIZE,
+        ...(selectedTag ? { tag: selectedTag } : {}),
+        ...(starredFilter ? { starred: starredFilter } : {}),
+        ...(statusFilter ? { status: statusFilter } : {}),
         onError: onGetTodosError,
         onSuccess: onGetTodosSuccess,
       });
     }
-  }, [page, status]);
+  }, [status, selectedTag, statusFilter, starredFilter]);
 
   return (
     <>
@@ -109,15 +130,24 @@ const TodosPage = () => {
                 <div className="flex-1 h-full px-6">
                   <AddTodoAction userId={data?.user?.userId || ''} onAddFinish={onAddFinish} tags={tags} />
                   <ul>
-                    <li className="todo-status-item ">
+                    <li
+                      onClick={() => onStatusFilterClick(`${TodoStatusType.Todo},${TodoStatusType.InProgress}`)}
+                      className={`cursor-pointer todo-status-item ${statusFilter === `${TodoStatusType.Todo},${TodoStatusType.InProgress}` ? 'todo-status-item-selected' : ''}`}
+                    >
                       <LayoutList width={20} />{' '}
                       <span className="ml-1 text-sm text-muted-foreground dark:text-slate-400 ">Open</span>
                     </li>
-                    <li className="todo-status-item">
+                    <li
+                      onClick={onStarredFilterClick}
+                      className={`cursor-pointer todo-status-item ${starredFilter ? 'todo-status-item-selected' : ''}`}
+                    >
                       <Star width={20} />
                       <span className="ml-1 text-sm text-muted-foreground dark:text-slate-400 ">Starred</span>
                     </li>
-                    <li className="todo-status-item">
+                    <li
+                      onClick={() => onStatusFilterClick(`${TodoStatusType.Done}`)}
+                      className={`cursor-pointer todo-status-item ${statusFilter === TodoStatusType.Done ? 'todo-status-item-selected' : ''}`}
+                    >
                       <ListChecks width={20} />
                       <span className=" ml-1 text-sm text-muted-foreground dark:text-slate-400 ">Completed</span>
                     </li>
@@ -125,7 +155,14 @@ const TodosPage = () => {
                   <div className="block py-4 text-slate-800 dark:text-slate-400 font-semibold text-xs uppercase">
                     Tags
                   </div>
-                  {!isLoadingTags && <Tags userId={data?.user.userId || ''} tags={tags} setTags={setTags} />}
+                  {!isLoadingTags && (
+                    <Tags
+                      userId={data?.user.userId || ''}
+                      tags={tags}
+                      setTags={setTags}
+                      setFilterTag={setSelectedTag}
+                    />
+                  )}
                 </div>
               </main>
             </div>

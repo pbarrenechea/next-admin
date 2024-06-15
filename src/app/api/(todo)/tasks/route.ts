@@ -119,7 +119,15 @@ export async function GET(req: NextRequest) {
     const page = Number(searchParams.get('page')) || DEFAULT_PAGE;
     const pageSize = Number(searchParams.get('pageSize')) || DEFAULT_PAGE_SIZE;
     const userId = searchParams.get('userId');
-    const tasks = await Task.find({ user: userId })
+    const label = searchParams.get('tag');
+    const starred = searchParams.get('starred');
+    const status = searchParams.get('status');
+    const tasks = await Task.find({
+      user: userId,
+      ...(label ? { 'labels._id': label } : {}),
+      ...(starred ? { starred: true } : {}),
+      ...(status ? { status: { $in: status.split(',') } } : {}),
+    })
       .sort({ dueDate: 'desc' })
       .skip(page * pageSize)
       .limit(pageSize);
