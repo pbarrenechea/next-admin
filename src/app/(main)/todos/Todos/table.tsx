@@ -18,6 +18,7 @@ type TodosTableProps = {
   onDeleteFinish: (id: string) => void;
   onEditFinish: (todo: TodoType) => void;
   onLoadMore: () => void;
+  totalResults: number;
 };
 
 const TodosTable = ({
@@ -29,6 +30,7 @@ const TodosTable = ({
   onEditFinish,
   tags,
   onLoadMore,
+  totalResults,
 }: TodosTableProps) => {
   return (
     <div className="card rounded-md bg-white dark:bg-slate-800 shadow-base mx-2">
@@ -85,10 +87,27 @@ const TodosTable = ({
           ))}
         </ul>
       )}
-      <div className="w-full text-center p-4">
-        <Button variant="ghost" onClick={onLoadMore}>
-          <span>Load More</span>
-        </Button>
+      <div className="w-full text-center p-4 mt-4">
+        <div className="w-full text-center">
+          {totalResults > 0 && (
+            <div className="bg-gray-200 rounded-full h-2.5 dark:bg-gray-700  w-[25%] inline-block">
+              <div
+                className="bg-accent-foreground h-2.5 rounded-full"
+                style={{
+                  width: (todos.length / totalResults) * 100 + '%',
+                }}
+              ></div>
+              <span className="text-[12px]">
+                Showing {todos.length} of {totalResults}
+              </span>
+            </div>
+          )}
+        </div>
+        {todos.length < totalResults && (
+          <Button variant="ghost" onClick={onLoadMore} className="mt-2">
+            <span>Load More</span>
+          </Button>
+        )}
       </div>
     </div>
   );

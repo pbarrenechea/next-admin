@@ -122,16 +122,18 @@ export async function GET(req: NextRequest) {
     const label = searchParams.get('tag');
     const starred = searchParams.get('starred');
     const status = searchParams.get('status');
-    const tasks = await Task.find({
+    const filters = {
       user: userId,
       ...(label ? { 'labels._id': label } : {}),
       ...(starred ? { starred: true } : {}),
       ...(status ? { status: { $in: status.split(',') } } : {}),
-    })
+    };
+
+    const tasks = await Task.find(filters)
       .sort({ dueDate: 'desc' })
       .skip(page * pageSize)
       .limit(pageSize);
-    const count = await Task.countDocuments({ user: userId });
+    const count = await Task.countDocuments(filters);
     const pages = Math.ceil(count / pageSize);
     return new Response(JSON.stringify({ tasks, pages, items: count }), {
       status: 200,

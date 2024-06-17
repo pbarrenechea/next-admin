@@ -8,7 +8,7 @@ type TodosDataParams = {
   tag?: string;
   starred?: boolean;
   status?: string;
-  onSuccess: (data: any) => void;
+  onSuccess: (data: any, totalItems: number) => void;
   onError: (error: any) => void;
 };
 
@@ -40,7 +40,7 @@ export const getTodosData = async ({
       throw new Error(errorResponse?.message);
     }
     const currentData = await response.json();
-    onSuccess(currentData.tasks);
+    onSuccess(currentData.tasks, currentData.items);
     return currentData.tasks;
   } catch (error: any) {
     onError(error.message);

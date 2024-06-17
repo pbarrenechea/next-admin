@@ -25,15 +25,17 @@ const TodosPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingTags, setIsLoadingTags] = useState(true);
   const [page, setPage] = useState(DEFAULT_PAGE);
-
-  const onGetTodosSuccess = (newTodos: Array<TodoType>) => {
+  const [totalResults, setTotalResults] = useState<number>(0);
+  const onGetTodosSuccess = (newTodos: Array<TodoType>, numberOfItems: number) => {
     setIsLoading(false);
     setTodos(newTodos);
+    setTotalResults(numberOfItems);
   };
 
-  const onGetNewPageSuccess = (newTodos: Array<TodoType>) => {
+  const onGetNewPageSuccess = (newTodos: Array<TodoType>, numberOfItems: number) => {
     setIsLoading(false);
     setTodos([...todos, ...newTodos]);
+    setTotalResults(numberOfItems);
   };
 
   const onGetTodosError = (message: string) => {
@@ -122,6 +124,7 @@ const TodosPage = () => {
 
   useEffect(() => {
     if (status === 'authenticated') {
+      setPage(0);
       getTodosData({
         userId: data?.user.userId || '',
         page: 0,
@@ -210,6 +213,7 @@ const TodosPage = () => {
               onDeleteFinish={onDeleteFinish}
               onEditFinish={onEditFinish}
               onLoadMore={onLoadMore}
+              totalResults={totalResults}
             />
           </div>
         </div>
