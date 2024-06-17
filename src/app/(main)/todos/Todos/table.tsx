@@ -1,22 +1,37 @@
 'use client';
 
-import { Star, Timer } from 'lucide-react';
+import { RotateCw, Star } from 'lucide-react';
 
 import TimerTooltip from '@/app/(main)/todos/Todos/TimerTooltip';
-import { TodoStatusType, TodoType } from '@/app/(main)/types';
+import { DeleteTododAction, EditTodoAction } from '@/app/(main)/todos/Todos/actions';
+import { TodoStatusType, TodoTagType, TodoType } from '@/app/(main)/types';
+import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import LoadingSpinner from '@/components/ui/spinner';
 
 type TodosTableProps = {
+  tags: Array<TodoTagType>;
   isLoading: boolean;
   todos: Array<TodoType>;
   onCompletitionUpdate: (todoId: string, value: boolean) => void;
   onStarredUpdate: (todoId: string, value: boolean) => void;
+  onDeleteFinish: (id: string) => void;
+  onEditFinish: (todo: TodoType) => void;
+  onLoadMore: () => void;
 };
 
-const TodosTable = ({ isLoading, todos, onStarredUpdate, onCompletitionUpdate }: TodosTableProps) => {
+const TodosTable = ({
+  isLoading,
+  todos,
+  onStarredUpdate,
+  onCompletitionUpdate,
+  onDeleteFinish,
+  onEditFinish,
+  tags,
+  onLoadMore,
+}: TodosTableProps) => {
   return (
-    <div className="card rounded-md bg-white dark:bg-slate-800 shadow-base h-full mx-2">
+    <div className="card rounded-md bg-white dark:bg-slate-800 shadow-base mx-2">
       {isLoading && <LoadingSpinner className="left-1/2 top-1/2 absolute" width="50" height="50" />}
       {!isLoading && (
         <ul className="divide-y divide-slate-100 dark:divide-slate-700 -mb-6 h-full">
@@ -62,10 +77,19 @@ const TodosTable = ({ isLoading, todos, onStarredUpdate, onCompletitionUpdate }:
                   </div>
                 ))}
               </div>
+              <div className="flex">
+                <EditTodoAction userId={todo.user} onEditFinish={onEditFinish} tags={tags} todo={todo} />
+                <DeleteTododAction todoId={todo._id} todoTitle={todo.name} onDeleteFinish={onDeleteFinish} />
+              </div>
             </li>
           ))}
         </ul>
       )}
+      <div className="w-full text-center p-4">
+        <Button variant="ghost" onClick={onLoadMore}>
+          <span>Load More</span>
+        </Button>
+      </div>
     </div>
   );
 };

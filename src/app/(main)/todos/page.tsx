@@ -31,6 +31,11 @@ const TodosPage = () => {
     setTodos(newTodos);
   };
 
+  const onGetNewPageSuccess = (newTodos: Array<TodoType>) => {
+    setIsLoading(false);
+    setTodos([...todos, ...newTodos]);
+  };
+
   const onGetTodosError = (message: string) => {
     setIsLoading(false);
     toast({ title: 'Problem getting the todos', description: message, variant: 'destructive' });
@@ -69,8 +74,16 @@ const TodosPage = () => {
     });
   };
 
-  const onAddFinish = async (todo: TodoType) => {
+  const onAddFinish = (todo: TodoType) => {
     setTodos([todo, ...todos]);
+  };
+
+  const onEditFinish = (todo: TodoType) => {
+    setTodos(todos.map((t) => (t._id === todo._id ? todo : t)));
+  };
+
+  const onDeleteFinish = (todoId: string) => {
+    setTodos(todos.filter((todo) => todo._id !== todoId));
   };
 
   const onStatusFilterClick = (filter: string) => {
@@ -85,6 +98,10 @@ const TodosPage = () => {
   const onStarredFilterClick = () => {
     setStatusFilter(null);
     setStarredFilter((prev) => !prev);
+  };
+
+  const onLoadMore = () => {
+    setPage(page + 1);
   };
 
   useEffect(() => {
@@ -105,7 +122,7 @@ const TodosPage = () => {
 
   useEffect(() => {
     if (status === 'authenticated') {
-      const params = getTodosData({
+      getTodosData({
         userId: data?.user.userId || '',
         page: 0,
         pageSize: DEFAULT_PAGE_SIZE,
@@ -117,6 +134,21 @@ const TodosPage = () => {
       });
     }
   }, [status, selectedTag, statusFilter, starredFilter]);
+
+  useEffect(() => {
+    if (page > 0) {
+      getTodosData({
+        userId: data?.user.userId || '',
+        page,
+        pageSize: DEFAULT_PAGE_SIZE,
+        ...(selectedTag ? { tag: selectedTag } : {}),
+        ...(starredFilter ? { starred: starredFilter } : {}),
+        ...(statusFilter ? { status: statusFilter } : {}),
+        onError: onGetTodosError,
+        onSuccess: onGetNewPageSuccess,
+      });
+    }
+  }, [page]);
 
   return (
     <>
@@ -170,10 +202,14 @@ const TodosPage = () => {
           {/* right panel */}
           <div className="flex-1 md:w-[calc(100%-320px)]">
             <TodosTable
+              tags={tags}
               isLoading={isLoading}
               todos={todos}
               onCompletitionUpdate={onCompletitionUpdate}
               onStarredUpdate={onStarredUpdate}
+              onDeleteFinish={onDeleteFinish}
+              onEditFinish={onEditFinish}
+              onLoadMore={onLoadMore}
             />
           </div>
         </div>
