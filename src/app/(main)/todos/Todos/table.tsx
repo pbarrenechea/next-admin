@@ -81,18 +81,23 @@ const TodosTable = ({
                   <TimerTooltip dueDate={todo.dueDate} status={todo.status} />
                 </div>
                 <div className="w-1/4">
-                  {todo.labels.map((label, index) => (
-                    <div
-                      className="inline-block px-1 md:px-1 min-w-[60px] md:min-w-[70px] text-center mx-1 py-1 rounded-[999px] bg-opacity-50 text-[12px]"
-                      key={`${index}-${label.name}`}
-                      style={{
-                        background: convertHexToRGBA(label.bgColor, 0.2),
-                        color: convertHexToRGBA(label.fontColor),
-                      }}
-                    >
-                      {label.name}
-                    </div>
-                  ))}
+                  {todo.labels.map((label, index) => {
+                    const tag = tags.find((t) => t._id === label._id);
+                    return (
+                      tag && (
+                        <div
+                          className="inline-block px-1 md:px-1 min-w-[60px] md:min-w-[70px] text-center mx-1 py-1 rounded-[999px] bg-opacity-50 text-[12px]"
+                          key={`${index}-${tag.name}`}
+                          style={{
+                            background: convertHexToRGBA(tag.bgColor, 0.2),
+                            color: convertHexToRGBA(tag.fontColor),
+                          }}
+                        >
+                          {label.name}
+                        </div>
+                      )
+                    );
+                  })}
                 </div>
                 <div className="flex">
                   <EditTodoAction userId={todo.user} onEditFinish={onEditFinish} tags={tags} todo={todo} />
