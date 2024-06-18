@@ -122,8 +122,17 @@ export async function GET(req: NextRequest) {
     const label = searchParams.get('tag');
     const starred = searchParams.get('starred');
     const status = searchParams.get('status');
+    const name = searchParams.get('name');
     const filters = {
       user: userId,
+      ...(name
+        ? {
+            name: {
+              $regex: name,
+              $options: 'i',
+            },
+          }
+        : {}),
       ...(label ? { 'labels._id': label } : {}),
       ...(starred ? { starred: true } : {}),
       ...(status ? { status: { $in: status.split(',') } } : {}),

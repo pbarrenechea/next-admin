@@ -2,7 +2,7 @@
 
 import { LayoutList, ListChecks, Star } from 'lucide-react';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/app/(main)/config/settings';
 import { getTodoTagsData } from '@/app/(main)/requests/todoTags';
@@ -13,15 +13,17 @@ import TodosTable from '@/app/(main)/todos/Todos/table';
 import { TodoStatusType, TodoTagType, TodoType } from '@/app/(main)/types';
 import Spinner from '@/components/ui/spinner';
 import { toast } from '@/components/ui/use-toast';
+import { debounce } from '@/lib/debounce';
 
 const TodosPage = () => {
   const { status, data } = useSession();
+  const [userId, setUserId] = useState<string | null>(null);
   const [todos, setTodos] = useState<Array<TodoType>>([]);
   const [tags, setTags] = useState<Array<TodoTagType>>([]);
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const [starredFilter, setStarredFilter] = useState<boolean>(false);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
-
+  const [query, setQuery] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingTags, setIsLoadingTags] = useState(true);
   const [page, setPage] = useState(DEFAULT_PAGE);
@@ -108,6 +110,7 @@ const TodosPage = () => {
 
   useEffect(() => {
     if (status === 'authenticated') {
+      setUserId(data?.user.userId || '');
       getTodoTagsData({
         userId: data?.user.userId || '',
         onError: (message: string) => {
@@ -122,12 +125,20 @@ const TodosPage = () => {
     }
   }, [status]);
 
+  const onQueryChange = useCallback(
+    debounce((query: string) => {
+      setQuery(query);
+    }, 200),
+    [],
+  );
+
   useEffect(() => {
     if (status === 'authenticated') {
       setPage(0);
       getTodosData({
         userId: data?.user.userId || '',
         page: 0,
+        ...(query ? { name: query } : {}),
         pageSize: DEFAULT_PAGE_SIZE,
         ...(selectedTag ? { tag: selectedTag } : {}),
         ...(starredFilter ? { starred: starredFilter } : {}),
@@ -136,7 +147,7 @@ const TodosPage = () => {
         onSuccess: onGetTodosSuccess,
       });
     }
-  }, [status, selectedTag, statusFilter, starredFilter]);
+  }, [status, selectedTag, statusFilter, starredFilter, query]);
 
   useEffect(() => {
     if (page > 0) {
@@ -144,6 +155,7 @@ const TodosPage = () => {
         userId: data?.user.userId || '',
         page,
         pageSize: DEFAULT_PAGE_SIZE,
+        ...(query ? { name: query } : {}),
         ...(selectedTag ? { tag: selectedTag } : {}),
         ...(starredFilter ? { starred: starredFilter } : {}),
         ...(statusFilter ? { status: statusFilter } : {}),
@@ -214,6 +226,7 @@ const TodosPage = () => {
               onEditFinish={onEditFinish}
               onLoadMore={onLoadMore}
               totalResults={totalResults}
+              onQueryChange={onQueryChange}
             />
           </div>
         </div>

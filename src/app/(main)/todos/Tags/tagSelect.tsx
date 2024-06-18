@@ -2,6 +2,7 @@ import React from 'react';
 import Select, { MultiValue, StylesConfig } from 'react-select';
 
 import { TodoTagType } from '@/app/(main)/types';
+import { convertHexToRGBA } from '@/lib/utils';
 
 type TagOption = {
   label: string;
@@ -16,14 +17,14 @@ const colourStyles: StylesConfig<TagOption, true> = {
     return {
       ...styles,
       'color': data.fontColor,
-      ':hover': { backgroundColor: data.bgColor },
+      ':hover': { backgroundColor: convertHexToRGBA(data.bgColor, 0.2) },
     };
   },
   multiValue: (styles, { data }) => {
     return {
       ...styles,
       borderRadius: '8px',
-      backgroundColor: data.bgColor,
+      backgroundColor: convertHexToRGBA(data.bgColor, 0.2),
     };
   },
   multiValueLabel: (styles, { data }) => ({

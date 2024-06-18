@@ -53,7 +53,7 @@ export const EditTodoAction = ({ userId, onEditFinish, tags, todo }: EditTodoAct
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="flex mx-2 w-4 h-4 p-0 border-0 bg-none hover:bg-none">
+        <Button variant="ghost" className="flex w-8 h-8 border-0 p-0 bg-none hover:bg-none ml-1">
           <Pencil className="w-4 h-4" />
         </Button>
       </DialogTrigger>
@@ -98,8 +98,8 @@ export const DeleteTododAction = ({ todoId, todoTitle, onDeleteFinish }: DeleteT
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="flex mx-2 w-4 h-4 p-0 border-0 bg-none hover:bg-none">
-          <Trash2 className="w-4 h-4 fill-none" />
+        <Button variant="ghost" className="flex w-8 h-8 border-0 p-0 bg-none hover:bg-none ml-1">
+          <Trash2 className="w-4 h-4" />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[350px]">
